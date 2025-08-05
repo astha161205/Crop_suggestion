@@ -1,0 +1,128 @@
+.gradient-button {
+    position: relative;
+    background: none;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.gradient-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #4ade80, #3b82f6, #a855f7);
+    background-size: 200% 200%;
+    border-radius: 1rem;
+    z-index: -1;
+    animation: gradientMove 3s linear infinite;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.gradient-button:active {
+    transform: scale(0.95);
+}
+
+/* @keyframes phone-ring {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+    100% { transform: translateX(0); }
+}
+
+.phone-button {
+    display: inline-block;
+    transition: transform 0.1s ease-in-out;
+}
+
+.phone-button:hover {
+    animation: phone-ring 0.15s ease-in-out infinite;
+    cursor: pointer;
+} */
+
+/* Accordion styles */
+.hidden { display: none; }
+.rotate-180 { transform: rotate(180deg); }
+img { transition: transform 0.3s ease; }
+
+.accordion-content {
+    transition: all 0.3s ease;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.accordion-content.active {
+    max-height: 500px;
+}
+
+.accordion-item {
+    transition: background-color 0.2s ease;
+}
+
+.accordion-item:hover {
+    background-color: #374151;
+}
+
+/* Scrollbar styles */
+#accordion-container::-webkit-scrollbar {
+    width: 8px;
+    background-color: rgba(31, 41, 55, 0.1);
+}
+
+#accordion-container::-webkit-scrollbar-track {
+    background: rgba(17, 24, 39, 0.2);
+    border-radius: 4px;
+}
+
+#accordion-container::-webkit-scrollbar-thumb {
+    background: rgba(132, 204, 22, 0.8);
+    border-radius: 4px;
+    border: 2px solid rgba(31, 41, 55, 0.2);
+}
+
+#accordion-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(163, 230, 53, 0.9);
+}
+
+/* Sidebar styles */
+.sidebar {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+.overlay {
+    backdrop-filter: blur(5px);
+    transition: opacity 0.3s ease-in-out;
+}
+.rotate-image {
+    width: 150px;
+    height: 100px;
+    transition: transform 10s ease-in-out;
+  }
+  
+  .rotate-image:hover {
+    transform: rotate(360deg);
+  }
+  
+  #profile-menu {
+    transform-origin: top right;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+#profile-menu.active {
+    opacity: 1;
+    transform: scale(1);
+    display: block;
+}
