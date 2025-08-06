@@ -55,7 +55,7 @@ session_start(); // Start the session
         <a href="./homePage.php" class="hover:text-white">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
         <a href="./blog.php" class="hover:text-white">Blog</a>
-        <a href="./homePage.php#About" class="hover:text-white">About us</a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <a href="./profile.php" class="hover:text-white">Profile</a>
         <?php else: ?>

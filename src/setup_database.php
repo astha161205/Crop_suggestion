@@ -118,13 +118,7 @@ foreach ($subsidies as $subsidy) {
 echo "<p>✓ Sample subsidies data inserted</p>";
 
 // Create admin user (password: admin123)
-$admin_password = password_hash('admin123', PASSWORD_DEFAULT);
-$stmt = $conn->prepare("INSERT IGNORE INTO farmer_profiles (name, email, password, user_type) VALUES (?, ?, ?, ?)");
-$admin_name = 'Admin User';
-$admin_email = 'admin@agrigrow.com';
-$user_type = 'admin';
-$stmt->bind_param("ssss", $admin_name, $admin_email, $admin_password, $user_type);
-$stmt->execute();
+
 
 echo "<p>✓ Admin user created (email: admin@agrigrow.com, password: admin123)</p>";
 

@@ -189,11 +189,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
             <div class="text-sm opacity-90">Active Schemes</div>
         </div>
         
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <div class=" <?php echo $theme['bg_card']; ?> p-6 rounded-xl">
             <div class="text-2xl font-bold text-blue-400">All India</div>
             <div class="text-sm text-gray-400">Coverage</div>
         </div>
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <div class=" <?php echo $theme['bg_card']; ?> p-6 rounded-xl">
             <div class="text-2xl font-bold text-purple-400">24/7</div>
             <div class="text-sm text-gray-400">Support</div>
         </div>
@@ -260,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
             }
             $displayed_titles[] = $subsidy['title'];
         ?>
-            <div class="subsidy-card bg-gray-800 rounded-xl p-6">
+            <div class="subsidy-card  <?php echo $theme['bg_card']; ?> rounded-xl p-6">
                 <!-- Status Badge -->
                 <div class="flex justify-between items-start mb-4">
                     <span class="bg-lime-500/20 text-lime-400 px-3 py-1 rounded-full text-sm">
@@ -277,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
                     <?php echo htmlspecialchars($subsidy['title']); ?>
                 </h3>
                 
-                <p class="text-gray-300 mb-4 line-clamp-3">
+                <p class="text-gray-500 mb-4 line-clamp-3">
                     <?php echo htmlspecialchars($subsidy['description']); ?>
                 </p>
 
@@ -285,19 +285,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
                 <div class="space-y-2 mb-4">
                     <div class="flex items-center text-sm">
                         <i class="fas fa-money-bill-wave text-lime-400 mr-2"></i>
-                        <span class="text-gray-300"><?php echo htmlspecialchars($subsidy['amount']); ?></span>
+                        <span class="text-gray-500"><?php echo htmlspecialchars($subsidy['amount']); ?></span>
                     </div>
                     
                     <div class="flex items-center text-sm">
                         <i class="fas fa-map-marker-alt text-blue-400 mr-2"></i>
-                        <span class="text-gray-300"><?php echo htmlspecialchars($subsidy['state']); ?></span>
+                        <span class="text-gray-500"><?php echo htmlspecialchars($subsidy['state']); ?></span>
                     </div>
                 </div>
 
                 <!-- Eligibility -->
                 <div class="mb-4">
                     <h4 class="text-sm font-semibold text-gray-400 mb-2">Eligibility:</h4>
-                    <p class="text-sm text-gray-300">
+                    <p class="text-sm text-gray-500">
                         <?php echo htmlspecialchars($subsidy['eligibility_criteria']); ?>
                     </p>
                 </div>

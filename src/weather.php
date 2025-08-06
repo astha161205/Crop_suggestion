@@ -1,5 +1,8 @@
 <?php
 session_start(); // Start the session
+require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,8 +15,12 @@ session_start(); // Start the session
     <link rel="stylesheet" href="./homecss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
         .bg-weather {
-            background-image: url('../photos/home/image.png');
+            background-image: url('../photos/home/weather.webp');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -173,7 +180,7 @@ session_start(); // Start the session
         }
     </style>
 </head>
-<body class="font-mono bg-gray-950 text-white relative text-center items-center">
+<body class="font-mono bg-gray-950 text-white relative text-center items-center no-scroll">
     
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
@@ -258,66 +265,43 @@ session_start(); // Start the session
                     </div>
                 </div>
                 
-                <!-- Farm Advisory Section -->
-                <div class="weather-card p-8 w-full max-w-6xl mb-6 mx-auto">
-                    <h3 class="text-2xl font-bold mb-6 text-center">Farm Advisory</h3>
-                    <div class="mb-5">
-                        <div class="text-lime-400 text-xl mb-3">Optimal Conditions</div>
-                        <p class="text-md">Current conditions are favorable for field activities. Consider irrigation in the morning.</p>
-                    </div>
-                    <div class="mb-5">
-                        <div class="font-bold text-lg mb-2">Crop Protection:</div>
-                        <p class="text-md">Low disease pressure. Monitor for pests in the evening.</p>
-                    </div>
-                    <div>
-                        <div class="font-bold text-lg mb-2">Soil Conditions:</div>
-                        <p class="text-md">Suitable for tillage and planting operations.</p>
-                    </div>
-                </div>
+                
             </div>
             
-            <!-- <a href="./homePage.php" class="bg-lime-500 hover:bg-lime-600 text-white font-bold py-2 px-6 rounded-2xl inline-block mt-8 mb-2 shadow-lg transition-all duration-300 ease-in-out text-lg hover:scale-105 active:scale-95">
-                Back to Home
-            </a> -->
+            
         </div>
     </div>
 
-    <footer class="bg-gray-900 w-full">
-        <div class="flex justify-center items-center p-4">
-            <p>© 2021 AgriGrow. All rights reserved</p>
-        </div>
-    </footer>
-
     <script src="./crop-data.js"></script>
     <script>
-        const WEATHER_API_KEY = '003f656acbdd9fd7222efa58911418ef'; // Working API key
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchButton = document.getElementById('searchButton');
-            const cityInput = document.getElementById('cityInput');
-            
-            function handleSearch() {
-                const city = cityInput.value.trim();
-                if (!city) {
-                    alert('Please enter a city name');
-                    return;
-                }
-                console.log('Searching for:', city);
-                getWeatherData(city).catch(error => {
-                    console.error('Search failed:', error);
-                    alert('Search failed: ' + error.message);
-                });
+    const WEATHER_API_KEY = "<?php echo $_ENV['WEATHER_API_KEY']; ?>";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchButton = document.getElementById('searchButton');
+        const cityInput = document.getElementById('cityInput');
+
+        function handleSearch() {
+            const city = cityInput.value.trim();
+            if (!city) {
+                alert('Please enter a city name');
+                return;
             }
-            
-            // Add event listeners
-            searchButton.addEventListener('click', handleSearch);
-            cityInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    handleSearch();
-                }
+            console.log('Searching for:', city);
+            getWeatherData(city).catch(error => {
+                console.error('Search failed:', error);
+                alert('Search failed: ' + error.message);
             });
+        }
+
+        searchButton.addEventListener('click', handleSearch);
+        cityInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleSearch();
+            }
         });
-        
+    });
+
+    
         async function getWeatherData(city) {
             try {
                 const initialMessage = document.getElementById('initialMessage');
@@ -356,6 +340,8 @@ session_start(); // Start the session
                 
                 loadingIndicator.classList.add('hidden-content');
                 weatherData.classList.remove('hidden-content');
+                document.body.classList.remove('no-scroll');
+                weatherData.scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 console.error('Error fetching weather data:', error);
                 alert(`Could not fetch weather data: ${error.message}`);

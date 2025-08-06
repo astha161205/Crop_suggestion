@@ -33,7 +33,7 @@ $theme = getThemeClasses();
         <a href="./homePage.php" class="<?php echo $theme['hover']; ?>"><?php echo __('home'); ?></a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>"><?php echo __('subsidies'); ?></a>
         <a href="./blog.php" class="<?php echo $theme['hover']; ?>"><?php echo __('blog'); ?></a>
-        <a href="./homePage.php#About" class="<?php echo $theme['hover']; ?>"><?php echo __('about_us'); ?></a>
+
         
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
@@ -52,7 +52,7 @@ $theme = getThemeClasses();
 
 
     <div class="mt-2 relative h-155 flex flex-col items-center justify-center rounded-2xl ml-5 mr-5 overflow-hidden">
-    <video 
+    <video  
         autoplay 
         loop 
         muted 
@@ -157,8 +157,8 @@ $theme = getThemeClasses();
 
 
 
-    <div class="partner bg-gray-900 pl-20 pr-20 ml-5 mr-5 rounded-2xl pt-5 pb-5 mt-25">
-        <div>
+    <div class="partner  <?php echo $theme['bg_card']; ?> px-6 py-5 mt-25 max-w-5xl mx-auto rounded-2xl flex flex-col items-center justify-center">
+    <div class="w-full flex flex-col p-3 ">
             <h1><strong class="text-2xl">Benifits</strong> to be partnered with us</h1>
             <p>Partner with us to access advanced agricultural technologies, expert support, and a community dedicated to sustainable farming.</p>
             <div class="partner_img flex justify-between gap-5 mt-10">
@@ -196,7 +196,7 @@ $theme = getThemeClasses();
             <div class="flex flex-col justify-between gap-2 h-110 overflow-y-auto w-120 pr-2 hover:pr-0 transition-all duration-300" 
      id="accordion-container">
                 <!-- Precision Agriculture -->
-                <div class="accordion-item border-2 border-gray-800 rounded-xl bg-gray-700">
+                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?>0 rounded-xl  <?php echo $theme['bg_card']; ?>">
                     <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
                         <h3 class="text-lg font-semibold">Precision Agriculture</h3>
                         <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
@@ -212,18 +212,18 @@ $theme = getThemeClasses();
                 </div>
     
                 <!-- Soil Health Optimization -->
-                <div class="accordion-item border-2 border-gray-800 rounded-xl bg-gray-700">
+                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?> rounded-xl  <?php echo $theme['bg_card']; ?>">
                     <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
                         <h3 class="text-lg font-semibold">Soil Health Optimization</h3>
                         <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
                     </div>
                     <div class="accordion-content px-4 pb-4 space-y-3">
                         <div class="grid grid-cols-2 gap-3 text-gray-300">
-                            <div class="bg-gray-800 p-3 rounded-lg">
+                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
                                 <h4 class="text-lime-300 text-sm font-semibold">Cover Cropping</h4>
                                 <p class="text-xs mt-1">Legume rotations adding 50kg N/ha</p>
                             </div>
-                            <div class="bg-gray-800 p-3 rounded-lg">
+                            <div class=" <?php echo $theme['bg_card']; ?>p-3 rounded-lg">
                                 <h4 class="text-lime-300 text-sm font-semibold">Biochar Amendment</h4>
                                 <p class="text-xs mt-1">20% increase in water retention</p>
                             </div>
@@ -232,7 +232,7 @@ $theme = getThemeClasses();
                 </div>
     
                 <!-- Smart Irrigation -->
-                <div class="accordion-item border-2 border-gray-800 rounded-xl bg-gray-700">
+                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?> rounded-xl  <?php echo $theme['bg_card']; ?>">
                     <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
                         <h3 class="text-lg font-semibold">Smart Irrigation</h3>
                         <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
@@ -247,21 +247,21 @@ $theme = getThemeClasses();
                 </div>
     
                 <!-- Eco-Pest Management -->
-                <div class="accordion-item border-2 border-gray-800 rounded-xl bg-gray-700">
+                <div class="accordion-item border-2 border-gray-800 rounded-xl  <?php echo $theme['bg_card']; ?>">
                     <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
                         <h3 class="text-lg font-semibold">Eco-Pest Management</h3>
                         <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
                     </div>
                     <div class="accordion-content px-4 pb-4 space-y-3">
                         <div class="grid grid-cols-2 gap-3 text-gray-300">
-                            <div class="bg-gray-800 p-3 rounded-lg">
+                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
                                 <h4 class="text-lime-300 text-sm font-semibold">Biological Controls</h4>
                                 <ul class="text-xs list-disc pl-4 mt-1 space-y-1">
                                     <li>Ladybugs for aphids</li>
                                     <li>Nematodes for grubs</li>
                                 </ul>
                             </div>
-                            <div class="bg-gray-800 p-3 rounded-lg">
+                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
                                 <h4 class="text-lime-300 text-sm font-semibold">Monitoring</h4>
                                 <ul class="text-xs list-disc pl-4 mt-1 space-y-1">
                                     <li>AI pest recognition</li>
@@ -327,7 +327,7 @@ $theme = getThemeClasses();
 
     </div>
 
-    <footer class=" bg-gray-900  mt-5  w-full">
+    <footer class="  <?php echo $theme['bg_card']; ?>  mt-5  w-full">
         <div class="flex justify-center items-center ">
             <p>© 2021 AgriGrow. <?php echo __('all_rights_reserved'); ?></p>
         </div>

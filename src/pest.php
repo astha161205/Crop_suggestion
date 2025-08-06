@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 require_once 'theme_manager.php';
 $theme = getThemeClasses();
 ?>
@@ -253,7 +256,7 @@ $theme = getThemeClasses();
 
 
 <script>
-const GEMINI_API_KEY = 'AIzaSyApehQ1TkiRU0_WMjlvavHUPyzKIxBoli8';
+const GEMINI_API_KEY = "<?php echo $_ENV['GEMINI_API_KEY']; ?>";
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
 
 // Add welcome message when page loads

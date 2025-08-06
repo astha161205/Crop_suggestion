@@ -95,7 +95,7 @@ while ($app = $applications->fetch_assoc()) {
         <a href="./homePage.php" class="hover:text-white">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
         <a href="./blog.php" class="hover:text-white">Blog</a>
-        <a href="./homePage.php#About" class="hover:text-white">About us</a>
+        
         <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
             <a href="./logout.php" class="hover:text-white text-red-400">Logout</a>
         <?php endif; ?>

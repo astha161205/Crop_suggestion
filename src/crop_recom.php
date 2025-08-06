@@ -61,6 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="./homecss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        body.no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
     .bg-crop_recommendation {
         background-image: url('../photos/home/seeds.jpg');
         background-size: cover;
@@ -101,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     </style>
 </head>
-<body class="font-mono bg-gray-950 text-white relative">
+<body class="font-mono bg-gray-950 text-white relative no-scroll">
 
 
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
@@ -116,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="./homePage.php" class="hover:text-white">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
         <a href="./blog.php" class="hover:text-white">Blog</a>
-        <a href="./homePage.php#About" class="hover:text-white">About us</a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <a href="./profile.php" class="hover:text-white">Profile</a>
         <?php else: ?>
@@ -131,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="bg-crop_recommendation min-h-screen flex flex-col items-center">
     <div class="content-container container mx-auto px-3 flex flex-col items-center justify-end w-full text-center">
-        <h1 class="text-6xl font-bold mb-6 text-white py-2 text-animate">Crop Recommendation</h1>
+        <h1 class="text-6xl font-bold mb-1 text-white py-2 text-animate">Crop Recommendation</h1>
         <!-- <p class="text-center mb-10 text-xl text-white px-4 py-2 max-w-4xl mx-auto text-animate">Our Crop Recommendation service helps farmers choose the best crops based on weather, soil conditi.</p> -->
         <div class="w-full max-w-4xl mx-auto bg-opacity-70 p-8 rounded-xl mb-10">
             <h3 class="text-xl font-semibold text-white text-center text-animate">Tell us about your agricultural field</h3>
@@ -181,20 +185,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </form>
 
-            <?php if (!empty($recommended_crop)): ?>
-                <div class="mt-8 bg-green-800 text-white p-4 rounded-lg text-xl font-semibold">
-                    Recommended Crop: <span class="text-lime-300"><?php echo htmlspecialchars($recommended_crop); ?></span>
-                </div>
-            <?php endif; ?>
+           <?php if (!empty($recommended_crop)): ?>
+    <div id="cropResult" class="mt-8 bg-green-800 text-white p-4 rounded-lg text-xl font-semibold">
+        Recommended Crop: <span class="text-lime-300"><?php echo htmlspecialchars($recommended_crop); ?></span>
+    </div>
+
+    <script>
+        // Allow scrolling
+        document.body.classList.remove('no-scroll');
+
+        // Scroll to the result
+        setTimeout(() => {
+            const result = document.getElementById("cropResult");
+            if (result) {
+                result.scrollIntoView({ behavior: "smooth" });
+            }
+        }, 200); // Small delay to ensure rendering is complete
+    </script>
+<?php endif; ?>
+
+
 
         </div>
     </div>
 
-    <footer class="bg-gray-900 h-8 mt-5 w-full">
-        <div class="flex justify-center items-center">
-            <p>© 2025 AgriGrow. All rights reserved</p>
-        </div>
-    </footer>
+    
 
     
 </body>
