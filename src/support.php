@@ -28,7 +28,7 @@ session_start();
     }
   </style>
 </head>
-<body class="font-mono bg-gray-950 text-white overflow-hidden">
+<body class="font-mono bg-gray-950 text-white ">
 
   <!-- Header -->
   <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">

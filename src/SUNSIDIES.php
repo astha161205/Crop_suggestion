@@ -9,6 +9,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Check connection health and reconnect if necessary
+if ($conn->ping() === false) {
+    $conn->close();
+    $conn = new mysqli("localhost", "root", "", "crop");
+}
+
 // Get filters from URL parameters
 $category_filter = $_GET['category'] ?? '';
 $state_filter = $_GET['state'] ?? '';
@@ -142,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
         <a href="./homePage.php" class="<?php echo $theme['hover']; ?>">Home</a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>">Subsidies</a>
         <a href="./blog.php" class="<?php echo $theme['hover']; ?>">Blog</a>
-        <a href="./homePage.php#About" class="<?php echo $theme['hover']; ?>">About us</a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
                 <a href="./admin_subsidies.php" class="<?php echo $theme['hover']; ?>">Admin Panel</a>

@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 // Database connection with error handling
 $conn = null;
 try {
-    $conn = new mysqli("localhost", "root", "", "crop");
+    $conn = new mysqli("localhost", "root", "", "crop", 3306);
     if ($conn->connect_error) {
         // Log error but don't die - allow the application to continue
         error_log("Database connection failed: " . $conn->connect_error);
@@ -129,4 +129,4 @@ function ensureThemeColumnExists() {
 
 // Initialize theme column
 ensureThemeColumnExists();
-?> 
+?>

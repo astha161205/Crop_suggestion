@@ -91,29 +91,21 @@ while ($app = $applications->fetch_assoc()) {
         </a>
     </div>
 
-    <div class="text-gray-400 flex items-center gap-5 border-2 border-gray-800 rounded-2xl pl-4 pr-4 pt-1 pb-1">
-        <a href="./homePage.php" class="hover:text-white">Home</a>
-        <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-        <a href="./blog.php" class="hover:text-white">Blog</a>
+    <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
+        <a href="./homePage.php" class="<?php echo $theme['hover']; ?>">Home</a>
+        <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>">Subsidies</a>
+        <a href="./blog.php" class="<?php echo $theme['hover']; ?>">Blog</a>
         
-        <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-            <a href="./logout.php" class="hover:text-white text-red-400">Logout</a>
+        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
+                <a href="./admin_subsidies.php" class="<?php echo $theme['hover']; ?>">Admin Panel</a>
+                <a href="./logout.php" class="<?php echo $theme['hover']; ?> text-red-400">Logout</a>
+            <?php else: ?>
+                <a href="./profile.php" class="<?php echo $theme['hover']; ?>">Profile</a>
+            <?php endif; ?>
+        <?php else: ?>
+            <a href="./login.php" class="<?php echo $theme['hover']; ?>">Login</a>
         <?php endif; ?>
-    </div>
-
-    <div class="relative">
-        <div class="flex items-center gap-2">
-            <button id="menu-btn" class="p-2 hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2">
-                <span class="text-white"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-                <i class="fa-solid fa-caret-down text-white text-sm"></i>
-            </button>
-        
-            <div id="profile-menu" class="hidden absolute right-0 mt-20 w-48 bg-gray-800 rounded-lg shadow-xl py-2">
-                <span class="block px-4 py-2 text-gray-400 cursor-default"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
-                <a href="./logout.php" class="block px-4 py-2 text-white hover:bg-gray-700">Logout</a>
-                <a href="./profile.php" class="block px-4 py-2 text-white hover:bg-gray-700">Profile</a>
-            </div>
-        </div>
     </div>
 </header>
 
