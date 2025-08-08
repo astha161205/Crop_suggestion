@@ -3,6 +3,24 @@ session_start(); // Start the session
 require_once 'theme_manager.php';
 require_once 'language_manager.php';
 $theme = getThemeClasses();
+
+// Database connection for blogs
+$host = 'localhost';
+$dbname = 'crop';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Fetch latest 3 published blogs
+    $stmt = $pdo->prepare("SELECT * FROM blogs WHERE status = 'published' ORDER BY created_at DESC LIMIT 3");
+    $stmt->execute();
+    $latest_blogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    $latest_blogs = []; // If database connection fails, show empty array
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,13 +33,64 @@ $theme = getThemeClasses();
     <link rel="stylesheet" href="./homecss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="./language.js"></script>
+    <style>
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 20px;
+}
 
+.box {
+  width: 350px;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+.caption {
+  color: white;
+}
+.box:hover {
+  transform: translateY(-5px);
+}
+
+.box img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.caption {
+  padding: 18px;
+  text-align: left;
+}
+
+.caption h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.caption a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.caption a:hover {
+  text-decoration: underline;
+}
+</style>
 </head>
 <body class="font-mono <?php echo $theme['bg']; ?> <?php echo $theme['text']; ?> relative">
 
 
 
-<header class="flex justify-between items-center <?php echo $theme['bg_header']; ?> h-15 sticky z-20 border-b-2 <?php echo $theme['border_header']; ?> top-0 pl-3 pr-3">
+<header class="flex justify-between items-center <?php echo $theme['bg_header']; ?> h-15 sticky z-20 border-b-2 <?php echo $theme['border_header']; ?> top-0   pl-3 pr-3">
     <div class="flex gap-2 items-center">
         <a href="./homePage.php" class="flex items-center gap-2">
             <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
@@ -101,7 +170,7 @@ $theme = getThemeClasses();
     <!-- Crop Recommendation Card -->
     <a href="./crop_recom.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/service_crop-recomendation2.jpg" alt="crop" class="h-45 w-full rounded-t-xl object-cover">
+        <img src="../photos/home/crop_rec.png" alt="crop" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('crop_recommendation'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -114,7 +183,7 @@ $theme = getThemeClasses();
     <!-- Weather Predictions Card -->
     <a href="./weather.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/3ZRAI3Y3EBFF7NGTSBCIS7EGRI.avif" alt="weather" class="h-45 w-full rounded-t-xl object-cover">
+        <img src="../photos/home/3ZRAI3Y3EBFF7NGTSBCIS7EGRI.avif" alt="weather" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('weather_forecast'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -127,7 +196,7 @@ $theme = getThemeClasses();
     <!-- Pest and Disease Card -->
     <a href="./pest.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/service_pesticidesjpg.jpg" alt="pest" class="h-45 w-full rounded-t-xl object-cover">
+        <img src="../photos/home/pest.webp" alt="pest" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('Pest Management Chatbot'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -140,9 +209,9 @@ $theme = getThemeClasses();
     <!-- Government Schemes Card -->
     <a href="./SUNSIDIES.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/1713762716-these-government-schemes-for-farmers-in-madhya-pradesh-madhya-pradesh-scheme-2024.jpg" alt="subsidies" class="h-55 w-full rounded-t-xl object-cover">
+        <img src="../photos/home/subsidies.png" alt="subsidies" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
-          <h3 class="text-lg font-bold mb-3 <?php echo $theme['text']; ?>"><?php echo __(' Government Subsidies'); ?></h3>
+          <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __(' Government Subsidies'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
             <?php echo __('discove and apply for government agriculture subsidies to Empower Your Farming Journey'); ?>
             
@@ -157,148 +226,100 @@ $theme = getThemeClasses();
 
 
 
-    <div class="partner  <?php echo $theme['bg_card']; ?> px-6 py-5 mt-25 max-w-5xl mx-auto rounded-2xl flex flex-col items-center justify-center">
-    <div class="w-full flex flex-col p-3 ">
-            <h1><strong class="text-2xl">Benifits</strong> to be partnered with us</h1>
-            <p>Partner with us to access advanced agricultural technologies, expert support, and a community dedicated to sustainable farming.</p>
-            <div class="partner_img flex justify-between gap-5 mt-10">
-                <img src="../photos/home/farm_tech.svg" alt="tech" class="h-25 w-30 rounded-2xl">
-                <img src="../photos/home/support.svg" alt="partner2" class="h-25 w-30 rounded-2xl">
-                <img src="../photos/home/sustainable.svg" alt="partner3" class="h-25 w-30 rounded-2xl rotate-image">
-                <img src="../photos/home/community.svg" alt="partner4" class="h-25 w-30 rounded-2xl">
-            </div>
-            <div class="partner_img flex justify-between gap-5 mt-3">
-                <a href="./farmtech.php"><p class="w-30 text-center ">farm_tech </p></a>
-                <a href="./support.php"><p class="w-30 text-center ">Support </p></a>
-                <a href="./sustainable.php"><p class="w-30 text-center ">Sustainable </p></a>
-                <a href="./community.php"><p class="w-30 text-center ">community </p></a>
-                
-            </div>
-        </div>
+    <div class="partner <?php echo $theme['bg_card']; ?> px-8 py-10 mt-10 max-w-4xl mx-auto rounded-2xl text-center">
+    
+    <!-- Heading -->
+    <h1 class="text-3xl p-4 font-bold">
+        Benefits <span class="font-normal">to be partnered with us</span>
+    </h1>
+    
+    <!-- Description -->
+    <p class="text-lg mb-2">
+        Partner with us to access advanced agricultural technologies and expert support.
+    </p>
 
+    <!-- Benefits Grid -->
+    <div class="flex justify-center gap-12 flex-wrap">
+        
+        <!-- Farm Tech -->
+        <a href="./farmtech.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+            <img src="../photos/home/farm_tech.svg" alt="tech" class="h-32 w-32 mb-4">
+            <p class="text-lg font-medium">farm_tech</p>
+        </a>
+
+        <!-- Support -->
+        <a href="./support.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+            <img src="../photos/home/support.svg" alt="support" class="h-32 w-32 mb-4">
+            <p class="text-lg font-medium">Support</p>
+        </a>
     </div>
+</div>
 
 
 
+<div id="blogs" class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4">
 
-
-    <div class="flex flex-col items-center mt-25" >
-        <h1 class="text-3xl font-bold mb-4">
-            Our Farming Methodology
-        </h1>
-        <p class="w-150 text-center mb-8">
-            Innovative agricultural practices combining technology and sustainability
+        <!-- Heading -->
+        <h2 class="text-4xl font-bold text-center mb-4">
+            Our Latest <span class="text-green-600">Blogs</span>
+        </h2>
+        <p class=" text-center mt-2 max-w-2xl mx-auto">
+            Discover insights on sustainable farming, investment opportunities, and industry trends.
+            Explore our latest articles for expert advice and practical tips.
         </p>
-        <div class="relative flex gap-8 items-start">
-            <img src="../photos/home/tractor-spray.jpg" alt="farming-methods" 
-                 class="h-110 w-150 rounded-xl object-cover sticky top-4">
-    
-            <div class="flex flex-col justify-between gap-2 h-110 overflow-y-auto w-120 pr-2 hover:pr-0 transition-all duration-300" 
-     id="accordion-container">
-                <!-- Precision Agriculture -->
-                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?>0 rounded-xl  <?php echo $theme['bg_card']; ?>">
-                    <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
-                        <h3 class="text-lg font-semibold">Precision Agriculture</h3>
-                        <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
-                    </div>
-                    <div class="accordion-content px-4 pb-4 space-y-3">
-                        <ul class="list-disc pl-6 text-gray-300 space-y-2">
-                            <li>Real-time soil moisture monitoring</li>
-                            <li>Crop health imaging (NDVI analysis)</li>
-                            <li>Variable-rate fertilizer application</li>
-                            <li>Automated yield mapping</li>
-                        </ul>
+
+        <div class="container">
+            <?php if (empty($latest_blogs)): ?>
+                <!-- Show default blogs if no blogs in database -->
+                <div class="box">
+                    <img src="../photos/home/box1.jpg" alt="Image 1">
+                    <div class="caption bg-gray-800 text-white" style="color: #fff">
+                        <h3 style="color: white">Investing In The Green Revolution: Growagros And Sustainable Agriculture</h3>
+                        <a href="https://www.growagros.com/blog/investing-in-the-green-revolution-growagros-and-sustainable-agriculture/">Read More »</a>
                     </div>
                 </div>
-    
-                <!-- Soil Health Optimization -->
-                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?> rounded-xl  <?php echo $theme['bg_card']; ?>">
-                    <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
-                        <h3 class="text-lg font-semibold">Soil Health Optimization</h3>
-                        <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
+
+                <div class="box">
+                    <img src="../photos/home/box2.webp" alt="Image 2">
+                    <div class="caption bg-gray-800" style="color: #fff">
+                        <h3 style="color: white">Everything You Need To Know About Agricultural Land Lease In India</h3>
+                        <a href="https://www.growagros.com/blog/everything-you-need-to-know-about-agricultural-land-lease-in-india/">Read More »</a>
                     </div>
-                    <div class="accordion-content px-4 pb-4 space-y-3">
-                        <div class="grid grid-cols-2 gap-3 text-gray-300">
-                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
-                                <h4 class="text-lime-300 text-sm font-semibold">Cover Cropping</h4>
-                                <p class="text-xs mt-1">Legume rotations adding 50kg N/ha</p>
-                            </div>
-                            <div class=" <?php echo $theme['bg_card']; ?>p-3 rounded-lg">
-                                <h4 class="text-lime-300 text-sm font-semibold">Biochar Amendment</h4>
-                                <p class="text-xs mt-1">20% increase in water retention</p>
-                            </div>
+                </div>
+
+                <div class="box">
+                    <img src="../photos/home/box3.jpg" alt="Image 3">
+                    <div class="caption bg-gray-800" style="color: #fff">
+                        <h3 style="color: white">Agricultural Technologies and Innovative Advanced Ways of Farming</h3>
+                        <a href="https://www.growagros.com/blog/agricultural-technologies-advanced-ways-of-farming/">Read More »</a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <?php foreach ($latest_blogs as $blog): ?>
+                    <div class="box">
+                        <img src="<?php echo htmlspecialchars($blog['cover_image_url']); ?>" alt="<?php echo htmlspecialchars($blog['title']); ?>">
+                        <div class="caption bg-gray-800 text-white" style="color: #fff">
+                            <h3 style="color: white"><?php echo htmlspecialchars($blog['title']); ?></h3>
+                            <a href="./view_blog.php?id=<?php echo $blog['id']; ?>">Read More »</a>
                         </div>
                     </div>
-                </div>
-    
-                <!-- Smart Irrigation -->
-                <div class="accordion-item border-2  <?php echo $theme['bg_card']; ?> rounded-xl  <?php echo $theme['bg_card']; ?>">
-                    <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
-                        <h3 class="text-lg font-semibold">Smart Irrigation</h3>
-                        <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
-                    </div>
-                    <div class="accordion-content px-4 pb-4 space-y-3">
-                        <ul class="list-disc pl-6 text-gray-300 space-y-2">
-                            <li>Soil tension monitoring</li>
-                            <li>Evapotranspiration calculations</li>
-                            <li>Drip irrigation automation</li>
-                        </ul>
-                    </div>
-                </div>
-    
-                <!-- Eco-Pest Management -->
-                <div class="accordion-item border-2 border-gray-800 rounded-xl  <?php echo $theme['bg_card']; ?>">
-                    <div class="accordion-header flex justify-between items-center p-4 cursor-pointer">
-                        <h3 class="text-lg font-semibold">Eco-Pest Management</h3>
-                        <img src="../photos/home/down.svg" class="h-5 w-5 transition-transform accordion-arrow">
-                    </div>
-                    <div class="accordion-content px-4 pb-4 space-y-3">
-                        <div class="grid grid-cols-2 gap-3 text-gray-300">
-                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
-                                <h4 class="text-lime-300 text-sm font-semibold">Biological Controls</h4>
-                                <ul class="text-xs list-disc pl-4 mt-1 space-y-1">
-                                    <li>Ladybugs for aphids</li>
-                                    <li>Nematodes for grubs</li>
-                                </ul>
-                            </div>
-                            <div class=" <?php echo $theme['bg_card']; ?> p-3 rounded-lg">
-                                <h4 class="text-lime-300 text-sm font-semibold">Monitoring</h4>
-                                <ul class="text-xs list-disc pl-4 mt-1 space-y-1">
-                                    <li>AI pest recognition</li>
-                                    <li>Smart trap networks</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
-    </div>
 
+</div>
 
+    <div class="flex items-center mt-20 gap-10 justify-between ml-10 mr-10 ">
 
-
-
-    
-
-
-
-    <div class="flex items-center mt-25 gap-20 justify-between ml-10 mr-10">
-
-        <div class="Agri_pro w-85 flex flex-col " >
-            <span class="flex gap-2 items-center">
-                <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-                <h1>AgriGrow</h1>
-            </span>
-            
-        </div>
+        
 
         <div class="Quick_link  flex flex-col" >
             <h1><?php echo __('quick_links'); ?></h1>
             <div class="flex flex-col gap-2 mt-3">
                 <a href="./homePage.php" class="flex items-center gap-3"><img src="../photos/home/home-1-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('home'); ?></a>
                 <a href="./blog.php" class="flex items-center gap-3"><img src="../photos/home/blog-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('blog'); ?></a>
-                <a href="./homePage.php#About" class="flex items-center gap-3"><img src="../photos/home/about.svg" alt="" class="h-4 w-4"><?php echo __('about_us'); ?></a>
+                <a href="./SUNSIDIES.php" class="flex items-center gap-3"><img src="../photos/home/about.svg" alt="" class="h-4 w-4"><?php echo __('Subsidies'); ?></a>
             </div>
         </div>
 
@@ -323,13 +344,11 @@ $theme = getThemeClasses();
         
     </div>
     
-    <div>
-
-    </div>
-
-    <footer class="  <?php echo $theme['bg_card']; ?>  mt-5  w-full">
-        <div class="flex justify-center items-center ">
-            <p>© 2021 AgriGrow. <?php echo __('all_rights_reserved'); ?></p>
+    
+</div>
+    <footer class="  <?php echo $theme['bg_card']; ?>    w-full">
+        <div class="flex  ">
+            <p class="p-2">© 2025 AgriGrow. <?php echo __('all_rights_reserved'); ?></p>
         </div>
     </footer>
 
@@ -379,6 +398,18 @@ document.addEventListener('click', (e) => {
     if (!profileMenu.contains(e.target) && !menuButton.contains(e.target)) {
         profileMenu.classList.remove('active');
     }
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll('.hover\\:shadow-lg');
+    cards.forEach((card, index) => {
+        card.style.opacity = 0;
+        card.style.transform = "translateY(30px)";
+        setTimeout(() => {
+            card.style.transition = "all 0.6s ease";
+            card.style.opacity = 1;
+            card.style.transform = "translateY(0)";
+        }, index * 200);
+    });
 });
         </script>
         

@@ -43,59 +43,169 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $farm_size = $_POST['farm_size'] ?? '';
     $location = $_POST['location'] ?? '';
 
-    // Handle image upload for both new profile and profile update
-    $profile_image = null;
+    // Handle profile image upload with new file path method
+    $profile_image_path = null;
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        $profile_image = file_get_contents($_FILES['profile_image']['tmp_name']);
-    }
-
-    if ($profileData) {
-        // Update existing profile
-        if ($profile_image !== null) {
-            $sql = "UPDATE farmer_profiles SET name=?, farm_name=?, farm_size=?, location=?, profile_image=? WHERE email=?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssdsss", $name, $farm_name, $farm_size, $location, $profile_image, $email);
-        } else {
-            $sql = "UPDATE farmer_profiles SET name=?, farm_name=?, farm_size=?, location=? WHERE email=?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssdss", $name, $farm_name, $farm_size, $location, $email);
+        // Create uploads directory if it doesn't exist
+        $upload_dir = "uploads/";
+        if (!file_exists($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
         }
-    } else {
-        // Create new profile
-        if ($profile_image !== null) {
-            $sql = "INSERT INTO farmer_profiles (name, email, farm_name, farm_size, location, profile_image) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssdss", $name, $email, $farm_name, $farm_size, $location, $profile_image);
-        } else {
-            $sql = "INSERT INTO farmer_profiles (name, email, farm_name, farm_size, location) VALUES (?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssdss", $name, $email, $farm_name, $farm_size, $location);
+        
+        $profile_image_path = uploadProfileImage($_FILES['profile_image'], $upload_dir, $email);
+        
+        // Check if upload was successful
+        if (strpos($profile_image_path, 'ERROR:') === 0) {
+            $message = $profile_image_path;
         }
     }
 
-    if ($stmt->execute()) {
-        $_SESSION['has_profile'] = true;
-        header("Location: profile.php");
-        exit();
-    } else {
-        $message = "Error: " . $conn->error;
+    if (empty($message)) { // Only proceed if no upload errors
+        if ($profileData) {
+            // Update existing profile
+            if ($profile_image_path !== null) {
+                $sql = "UPDATE farmer_profiles SET name=?, farm_name=?, farm_size=?, location=?, profile_image_path=? WHERE email=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssdsss", $name, $farm_name, $farm_size, $location, $profile_image_path, $email);
+            } else {
+                $sql = "UPDATE farmer_profiles SET name=?, farm_name=?, farm_size=?, location=? WHERE email=?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssdss", $name, $farm_name, $farm_size, $location, $email);
+            }
+        } else {
+            // Create new profile
+            if ($profile_image_path !== null) {
+                $sql = "INSERT INTO farmer_profiles (name, email, farm_name, farm_size, location, profile_image_path) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("sssdss", $name, $email, $farm_name, $farm_size, $location, $profile_image_path);
+            } else {
+                $sql = "INSERT INTO farmer_profiles (name, email, farm_name, farm_size, location) VALUES (?, ?, ?, ?, ?)";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssdss", $name, $email, $farm_name, $farm_size, $location);
+            }
+        }
+
+        if ($stmt->execute()) {
+            $_SESSION['has_profile'] = true;
+            header("Location: profile.php");
+            exit();
+        } else {
+            $message = "Error: " . $conn->error;
+        }
     }
 }
 
-// Handle profile image upload separately
-if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-    $profile_image = file_get_contents($_FILES['profile_image']['tmp_name']);
-    $sql = "UPDATE farmer_profiles SET profile_image=? WHERE email=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("bs", $profile_image, $email);
-    if ($stmt->execute()) {
-        header("Location: profile.php");
-        exit();
+// Function to handle profile image upload with validation and compression
+function uploadProfileImage($file, $upload_dir, $email) {
+        // Check file size (max 5MB)
+        $max_size = 5 * 1024 * 1024; // 5MB in bytes
+        if ($file['size'] > $max_size) {
+            return "ERROR: File too large. Maximum size is 5MB.";
+        }
+        
+        // Check file type
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!in_array($file['type'], $allowed_types)) {
+            return "ERROR: Invalid file type. Only JPG, PNG, and GIF are allowed.";
+        }
+        
+        $file_extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $file_name = 'profile_' . $email . '_' . time() . '_' . uniqid() . '.' . $file_extension;
+        $file_path = $upload_dir . $file_name;
+        
+        // Compress image if it's too large and GD is available
+        if ($file['size'] > 1024 * 1024 && extension_loaded('gd')) { // If larger than 1MB and GD available
+            $file_path = compressProfileImage($file['tmp_name'], $file_path, $file['type']);
+        } else {
+            if (!move_uploaded_file($file['tmp_name'], $file_path)) {
+                return "ERROR: Failed to upload file.";
+            }
+        }
+        
+        return $file_path;
     }
-}
+    
+    // Function to compress profile image
+    function compressProfileImage($source_path, $destination_path, $image_type) {
+        // Check if GD library is available
+        if (!extension_loaded('gd')) {
+            // Fallback: just copy the file without compression
+            if (copy($source_path, $destination_path)) {
+                return $destination_path;
+            } else {
+                return "ERROR: Failed to copy file (GD not available).";
+            }
+        }
+        
+        $max_width = 800;
+        $max_height = 800;
+        $quality = 85;
+        
+        list($width, $height) = getimagesize($source_path);
+        
+        // Calculate new dimensions
+        if ($width > $max_width || $height > $max_height) {
+            $ratio = min($max_width / $width, $max_height / $height);
+            $new_width = round($width * $ratio);
+            $new_height = round($height * $ratio);
+        } else {
+            $new_width = $width;
+            $new_height = $height;
+        }
+        
+        // Create new image
+        $new_image = imagecreatetruecolor($new_width, $new_height);
+        
+        // Load source image
+        switch ($image_type) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                $source_image = imagecreatefromjpeg($source_path);
+                break;
+            case 'image/png':
+                $source_image = imagecreatefrompng($source_path);
+                // Preserve transparency for PNG
+                imagealphablending($new_image, false);
+                imagesavealpha($new_image, true);
+                break;
+            case 'image/gif':
+                $source_image = imagecreatefromgif($source_path);
+                break;
+            default:
+                return "ERROR: Unsupported image type.";
+        }
+        
+        // Resize image
+        imagecopyresampled($new_image, $source_image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+        
+        // Save compressed image
+        switch ($image_type) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                imagejpeg($new_image, $destination_path, $quality);
+                break;
+            case 'image/png':
+                imagepng($new_image, $destination_path, round($quality / 10));
+                break;
+            case 'image/gif':
+                imagegif($new_image, $destination_path);
+                break;
+        }
+        
+        // Clean up
+        imagedestroy($source_image);
+        imagedestroy($new_image);
+        
+        return $destination_path;
+    }
 
 // Function to get profile image
 function getProfileImage($profileData) {
+    // Try new column first
+    if (isset($profileData['profile_image_path']) && $profileData['profile_image_path']) {
+        return $profileData['profile_image_path'];
+    }
+    // Fallback to old binary data method
     if (isset($profileData['profile_image']) && $profileData['profile_image']) {
         return 'data:image/jpeg;base64,' . base64_encode($profileData['profile_image']);
     }

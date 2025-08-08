@@ -28,7 +28,7 @@ session_start(); // Start the session
     <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
       <a href="./homePage.php" class="hover:text-white">Home</a>
       <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-      <a href="./blog.php" class="hover:text-white">Blog</a>
+      <a href="#blogs" class="hover:text-white">Blog</a>
       
       <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
         <a href="./profile.php" class="hover:text-white">Profile</a>

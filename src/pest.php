@@ -86,6 +86,58 @@ $theme = getThemeClasses();
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Dropdown menu styles */
+        .dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            margin-bottom: 8px;
+            width: 320px;
+            background: white;
+            color: #1f2937;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            transition: all 0.3s ease-in-out;
+            transform-origin: bottom;
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+        }
+        
+        .dropdown-menu.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        
+        .dropdown-menu button {
+            width: 100%;
+            text-align: left;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .dropdown-menu button:hover {
+            background-color: #dbeafe;
+        }
+        
+        /* Dark theme support */
+        .dark .dropdown-menu {
+            background: #1f2937;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .dark .dropdown-menu button:hover {
+            background-color: #1e3a8a;
+        }
     </style>
 </head>
 <body class="font-mono <?php echo $theme['bg']; ?> <?php echo $theme['text']; ?> min-h-screen">
@@ -99,8 +151,8 @@ $theme = getThemeClasses();
     <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
         <a href="./homePage.php" class="<?php echo $theme['hover']; ?>">Home</a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>">Subsidies</a>
-        <a href="./blog.php" class="<?php echo $theme['hover']; ?>">Blog</a>
-        <a href="./homePage.php#About" class="<?php echo $theme['hover']; ?>">About us</a>
+        <a href="#blogs" class="<?php echo $theme['hover']; ?>">Blog</a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <a href="./profile.php" class="<?php echo $theme['hover']; ?>">Profile</a>
         <?php else: ?>
@@ -121,7 +173,7 @@ $theme = getThemeClasses();
         <section class=" md:w-1/3 p-3 md:p-4 <?php echo $theme['bg']; ?> flex flex-col " style="height:90vh; ">
             <div class="<?php echo $theme['bg_card']; ?> rounded-xl shadow-lg  p-4 flex flex-col h-full border <?php echo $theme['border']; ?>">
                 <div class="overflow-y-auto flex-1 h-full pr-2">
-                    <h1 class="text-2xl md:text-3xl font-bold mb-2 text-blue-400 top-0 bg-inherit py-2 z-10">Pest & Disease Control in Crops</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold mb-2 text-blue-400 top-0 bg-inherit py-2 z-10">Pest & Disease Control </h1>
                     <p class="text-base <?php echo $theme['text_secondary']; ?> mb-6">Learn about common crop pests, their signs, and how to control them using safe and effective methods.</p>
                     <div class="space-y-4 pb-4">
                         <!-- Card 1 -->
@@ -189,7 +241,8 @@ $theme = getThemeClasses();
         </section>
 
         <!-- Right: Chatbot Section -->
-        <section class=" md:w-2/3 p-3 md:p-4 <?php echo $theme['bg']; ?> flex flex-col " style="height:90vh; ">
+        <section class="p-3 md:p-4 <?php echo $theme['bg']; ?> flex flex-col" style="height:90vh; width:1500px;">
+
             <div class="<?php echo $theme['bg_card']; ?> rounded-xl shadow-lg p-4 flex flex-col h-full border <?php echo $theme['border']; ?>">
                 <div class="flex items-center gap-3  mb-3">
                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -213,7 +266,7 @@ $theme = getThemeClasses();
                             <button id="plusBtn" type="button" class="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 transition focus:outline-none">
                                  <i class="fas fa-plus"></i>
                             </button>
-                            <div id="plusDropdown" class="absolute bottom-full left-0 mb-2 w-80 bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-blue-400 rounded-lg shadow-lg z-50 hidden transition-all duration-200 ease-in-out">
+                            <div id="plusDropdown" class="dropdown-menu hidden">
                               <button onclick="document.getElementById('fileInput').click(); hideDropdown();" class="w-full text-left px-4 py-2 hover:bg-blue-100 dark:hover:bg-blue-900 flex items-center gap-2">
                                 <i class="fas fa-paperclip"></i> Upload Image
                                 </button>
@@ -729,7 +782,19 @@ const plusDropdown = document.getElementById('plusDropdown');
 // Toggle dropdown on button click
 plusBtn.addEventListener('click', function (e) {
     e.stopPropagation();
-    plusDropdown.classList.toggle('hidden');
+    if (plusDropdown.classList.contains('hidden')) {
+        // Show dropdown with upward animation
+        plusDropdown.classList.remove('hidden');
+        setTimeout(() => {
+            plusDropdown.classList.add('show');
+        }, 10);
+    } else {
+        // Hide dropdown with downward animation
+        plusDropdown.classList.remove('show');
+        setTimeout(() => {
+            plusDropdown.classList.add('hidden');
+        }, 300);
+    }
 });
 
 // Hide dropdown only if clicked outside
@@ -738,9 +803,24 @@ document.addEventListener('click', function (event) {
     const isClickOnButton = plusBtn.contains(event.target);
 
     if (!isClickInsideDropdown && !isClickOnButton) {
-        plusDropdown.classList.add('hidden');
+        // Hide dropdown with downward animation
+        plusDropdown.classList.remove('show');
+        setTimeout(() => {
+            plusDropdown.classList.add('hidden');
+        }, 300);
     }
 });
+function hideDropdown() {
+    const plusDropdown = document.getElementById('plusDropdown');
+    if (plusDropdown && !plusDropdown.classList.contains('hidden')) {
+        // Hide dropdown with downward animation
+        plusDropdown.classList.remove('show');
+        setTimeout(() => {
+            plusDropdown.classList.add('hidden');
+        }, 300);
+    }
+}
+
 function toggleDropdown() {
         const dropdown = document.getElementById("dropdownMenu");
         dropdown.classList.toggle("hidden");

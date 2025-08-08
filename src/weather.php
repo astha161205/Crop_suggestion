@@ -193,8 +193,8 @@ $dotenv->load();
     <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
         <a href="./homePage.php" class="hover:text-white">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-        <a href="./blog.php" class="hover:text-white">Blog</a>
-        <a href="./homePage.php#About" class="hover:text-white">About us</a>
+        <a href="#blogs" class="hover:text-white">Blog</a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <a href="./profile.php" class="hover:text-white">Profile</a>
         <?php else: ?>
@@ -225,7 +225,7 @@ $dotenv->load();
                     <i class="fa-solid fa-umbrella text-lime-500 fa-3x"></i>
                 </div>
                 <h3 class="text-2xl font-bold mb-4">Enter a city name to get weather information</h3>
-                <p class="text-gray-300 text-lg">Search for any location to view detailed weather forecast and farming recommendations</p>
+                <p class="text-gray-300 text-lg">Search for any location to view detailed weather forecast</p>
             </div>
             
             <div id="loadingIndicator" class="hidden-content text-center mb-10 mx-auto">

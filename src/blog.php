@@ -1,12 +1,34 @@
 <?php
 session_start(); // Start the session
+
+// Database connection
+$host = 'localhost';
+$dbname = 'crop';
+$username = 'root';
+$password = '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+
+// Fetch all published blogs ordered by creation date (newest first)
+try {
+    $stmt = $pdo->prepare("SELECT * FROM blogs WHERE status = 'published' ORDER BY created_at DESC");
+    $stmt->execute();
+    $blogs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch(PDOException $e) {
+    die("Error fetching blogs: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agri-Grow</title>
+    <title>Blog - Agri-Grow</title>
     <link rel="icon" href="../photos/home/favicon2.svg" type="image/svg+xml">
     <link href="./output.css" rel="stylesheet">
     <link rel="stylesheet" href="./homecss.css">
@@ -14,8 +36,6 @@ session_start(); // Start the session
 
 </head>
 <body class="font-mono bg-gray-950 text-white relative">
-
-
 
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
@@ -35,115 +55,89 @@ session_start(); // Start the session
         <a href="./login.php" class="hover:text-white">Login</a>
       <?php endif; ?>
     </div>
-  </header>
-    
+</header>
 
-    <main class="container mx-auto px-4 py-12 max-w-4xl">
-        <!-- Blog 1 - Full Width -->
-        <article class="bg-gray-900 rounded-2xl p-8 mb-16">
-            <div class="flex items-center text-sm text-gray-400 mb-4">
-                <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">Smart Farming</span>
-                <span>September 15, 2023</span>
-            </div>
-            <h1 class="text-3xl font-bold mb-6">Revolutionizing Agriculture with IoT: A Comprehensive Guide</h1>
-            <img src="../photos/home/IoT-in-Agriculture.png" alt="IoT in farming" class="w-full h-96 object-cover rounded-xl mb-8">
-            
-            <div class="space-y-6 text-gray-300">
-                <p class="text-lg leading-relaxed">The integration of Internet of Things (IoT) technology in agriculture is transforming traditional farming practices. Smart sensors deployed across fields collect real-time data on soil moisture, temperature, and crop health, enabling farmers to make data-driven decisions.</p>
-
-                <div class="bg-gray-800 p-6 rounded-xl">
-                    <h2 class="text-xl font-bold mb-4 text-lime-300">Key IoT Applications:</h2>
-                    <ul class="list-disc pl-6 space-y-3">
-                        <li>Precision irrigation systems reducing water usage by 40%</li>
-                        <li>Livestock monitoring through GPS-enabled collars</li>
-                        <li>Automated pest detection using image recognition</li>
-                        <li>Predictive analytics for crop yield optimization</li>
-                    </ul>
-                </div>
-
-                <p class="text-lg leading-relaxed">Recent case studies from California's Central Valley show IoT adoption has increased average yields by 22% while reducing chemical usage by 35%. Farmers can now monitor their fields remotely through mobile apps, receiving instant alerts about potential issues.</p>
-            </div>
-        </article>
-
-        <!-- Blog 2 - Full Width -->
-        <article class="bg-gray-900 rounded-2xl p-8 mb-16">
-            <div class="flex items-center text-sm text-gray-400 mb-4">
-                <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">Pest Control</span>
-                <span>September 12, 2023</span>
-            </div>
-            <h1 class="text-3xl font-bold mb-6">Integrated Pest Management: Sustainable Solutions for Modern Farms</h1>
-            <img src="../photos/home/Pest-management.jpg" alt="Pest management" class="w-full h-96 object-cover rounded-xl mb-8">
-            
-            <div class="space-y-6 text-gray-300">
-                <p class="text-lg leading-relaxed">Traditional pesticide reliance is being replaced by Integrated Pest Management (IPM) strategies that combine biological, cultural, and mechanical controls. This approach reduces chemical use by 50-75% while maintaining crop protection.</p>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="bg-gray-800 p-6 rounded-xl">
-                        <h3 class="text-lg font-bold mb-3 text-lime-300">Biological Controls</h3>
-                        <ul class="space-y-2">
-                            <li>→ Ladybugs for aphid control</li>
-                            <li>→ Parasitic wasps against caterpillars</li>
-                            <li>→ Nematodes for soil-borne pests</li>
-                        </ul>
-                    </div>
-                    <div class="bg-gray-800 p-6 rounded-xl">
-                        <h3 class="text-lg font-bold mb-3 text-lime-300">Cultural Practices</h3>
-                        <ul class="space-y-2">
-                            <li>→ Crop rotation strategies</li>
-                            <li>→ Trap cropping techniques</li>
-                            <li>→ Resistant variety selection</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <p class="text-lg leading-relaxed">A 2023 USDA study showed farms implementing IPM strategies saw 28% higher profitability due to reduced input costs and premium organic pricing. Mobile apps like PestWeb now help farmers identify pests through AI-powered image recognition.</p>
-            </div>
-        </article>
-
-        <!-- Blog 3 - Full Width -->
-        <article class="bg-gray-900 rounded-2xl p-8 mb-16">
-            <div class="flex items-center text-sm text-gray-400 mb-4">
-                <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">Agri-Tech</span>
-                <span>September 10, 2023</span>
-            </div>
-            <h1 class="text-3xl font-bold mb-6">Drone Technology in Precision Agriculture: 2023 Market Report</h1>
-            <img src="../photos/home/Drone.jpg" alt="Agricultural drones" class="w-full h-96 object-cover rounded-xl mb-8">
-            
-            <div class="space-y-6 text-gray-300">
-                <p class="text-lg leading-relaxed">Agricultural drone usage has skyrocketed 300% since 2020, with the global market expected to reach $9.6 billion by 2027. Modern drones equipped with multispectral sensors provide crucial data for:</p>
-
-                <div class="bg-gray-800 p-6 rounded-xl">
-                    <div class="flex flex-wrap gap-4">
-                        <div class="flex-1 min-w-[200px]">
-                            <h3 class="text-lg font-bold text-lime-300 mb-2">Top Applications</h3>
-                            <ul class="space-y-2">
-                                <li>→ Crop health monitoring</li>
-                                <li>→ Precision spraying</li>
-                                <li>→ Planting optimization</li>
-                            </ul>
-                        </div>
-                        <div class="flex-1 min-w-[200px]">
-                            <h3 class="text-lg font-bold text-lime-300 mb-2">Key Benefits</h3>
-                            <ul class="space-y-2">
-                                <li>→ 90% chemical reduction</li>
-                                <li>→ 60% faster field analysis</li>
-                                <li>→ $127/acre cost savings</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <p class="text-lg leading-relaxed">New AI-powered drones like the DJI Agras T40 can autonomously map 500-acre fields in 90 minutes, while variable-rate spraying systems reduce herbicide use by targeting weeds with millimeter precision.</p>
-            </div>
-        </article>
-
-    </main>
-
-    <footer class=" bg-gray-900  mt-5  w-full">
-        <div class="flex justify-center items-center ">
-            <p>© 2021 AgriGrow. All rights reserved</p>
+<main class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- Write Your Own Blog Button -->
+    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+        <div class="text-center mb-12">
+            <a href="./write_blog.php" class="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300 text-lg">
+                <i class="fas fa-pen-fancy mr-3"></i>
+                Write Your Own Blog
+            </a>
         </div>
-    </footer>
+    <?php endif; ?>
+
+    <!-- Blog Posts -->
+    <?php if (empty($blogs)): ?>
+        <div class="text-center py-12">
+            <div class="text-gray-400 text-lg mb-4">
+                <i class="fas fa-newspaper text-6xl mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2">No blogs yet</h2>
+                <p>Be the first to share your farming knowledge!</p>
+            </div>
+            <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+                <a href="./write_blog.php" class="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-pen-fancy mr-2"></i>
+                    Write the First Blog
+                </a>
+            <?php else: ?>
+                <a href="./login.php" class="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Login to Write Blog
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php else: ?>
+        <?php foreach ($blogs as $blog): ?>
+            <article class="bg-gray-900 rounded-2xl p-8 mb-16">
+                <div class="flex items-center text-sm text-gray-400 mb-4">
+                    <?php if (!empty($blog['tags'])): ?>
+                        <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">
+                            <?php echo htmlspecialchars(explode(',', $blog['tags'])[0]); ?>
+                        </span>
+                    <?php endif; ?>
+                    <span><?php echo date('F j, Y', strtotime($blog['created_at'])); ?></span>
+                    <?php if (!empty($blog['author_name'])): ?>
+                        <span class="ml-4">by <?php echo htmlspecialchars($blog['author_name']); ?></span>
+                    <?php endif; ?>
+                </div>
+                
+                <h1 class="text-3xl font-bold mb-6"><?php echo htmlspecialchars($blog['title']); ?></h1>
+                
+                <img src="<?php echo htmlspecialchars($blog['cover_image_url']); ?>" 
+                     alt="<?php echo htmlspecialchars($blog['title']); ?>" 
+                     class="w-full h-96 object-cover rounded-xl mb-8">
+                
+                <div class="space-y-6 text-gray-300">
+                    <?php 
+                    // Show only first 300 characters of content with "Read More" link
+                    $content = $blog['content'];
+                    $excerpt = substr($content, 0, 300);
+                    if (strlen($content) > 300) {
+                        $excerpt .= '...';
+                    }
+                    echo nl2br(htmlspecialchars($excerpt));
+                    ?>
+                </div>
+                
+                <div class="mt-6">
+                    <a href="./view_blog.php?id=<?php echo $blog['id']; ?>" 
+                       class="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Read Full Article
+                    </a>
+                </div>
+            </article>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</main>
+
+<footer class="bg-gray-900 mt-5 w-full">
+    <div class="flex justify-center items-center">
+        <p>© 2021 AgriGrow. All rights reserved</p>
+    </div>
+</footer>
 
 </body>
 </html>

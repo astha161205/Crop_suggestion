@@ -1,126 +1,363 @@
 <?php
-session_start(); // Start the session
+session_start();
+// Dummy testimonials and technologies arrays
+$testimonials = [
+  [
+    "name" => "John D.",
+    "avatar" => "JD",
+    "image" => "https://placehold.co/100x100",
+    "hint" => "farmer portrait",
+    "title" => "A Game Changer for Water Savings",
+    "quote" => "The precision irrigation system recommended by AgriAssist cut our water usage by 30%. My crops have never been healthier, and my utility bills have never been lower. It's truly a game-changer. ",
+  ],
+  [
+    "name" => "Maria S.",
+    "avatar" => "MS",
+    "image" => "https://placehold.co/100x100",
+    "hint" => "farmer smiling",
+    "title" => "Efficiency Like Never Before",
+    "quote" => "I was skeptical about autonomous tractors, but the efficiency gains are undeniable. I can now manage my 1000-acre farm with a smaller team, saving time and money. ",
+  ],
+  [
+    "name" => "Chen W.",
+    "avatar" => "CW",
+    "image" => "https://placehold.co/100x100",
+    "hint" => "woman farmer",
+    "title" => "Data-driven Decisions",
+    "quote" => "Using drones for crop monitoring has revolutionized how I approach pest management. I can spot issues weeks earlier than before and apply treatments with surgical precision. ",
+  ],
+];
+
+$technologies = [
+  [
+    "name" => "Precision Irrigation Systems",
+    "description" => "Optimize water usage with sensors and automated controls, delivering water exactly when it’s needed.",
+    "category" => "Water Management",
+    "image" => "../photos/home/irirgation.png",
+    "icon" => "💧",
+    "link" => "https://eos.com/blog/precision-irrigation/",
+  ],
+  [
+    "name" => "Autonomous Tractors",
+    "description" => "Increase efficiency and reduce labor costs with self-driving tractors for tasks like planting, tilling, and harvesting.",
+    "category" => "Automation",
+    "image" => "../photos/home/autonomus_tractors.jpg",
+    "icon" => "🚜",
+    "link" => "https://www.deere.com/en/autonomous/",
+  ],
+  [
+    "name" => "Renewable Energy Solutions",
+    "description" => "Use solar and wind power to reduce your farm's carbon footprint, energy costs and environmental impact.",
+    "category" => "Sustainability",
+    "image" => "../photos/home/renewable_resoure.png",
+    "icon" => "🌱",
+    "link" => "https://www.hitachienergy.com/in/en/markets/renewable-energy",
+  ],
+  [
+    "name" => "Agricultural Drone ",
+    "description" => "Utilize drones for real-time crop health monitoring and pest detection.",
+    "category" => "Data & Monitoring",
+    "image" => "../photos/home/drones.webp",
+    "icon" => "🚁",
+    "link" => "https://ag.dji.com/",
+  ],
+  [
+    "name" => "Vertical Farming Systems",
+    "description" => "Grow crops in stacked layers, often indoors, to maximize space and control growing conditions year-round.",
+    "category" => "Indoor Farming",
+    "image" => "../photos/home/Vertical Farming Systems.png",
+    "icon" => "🏙️",
+    "link" => "https://www.cropin.com/vertical-farming/#:~:text=Vertical%20farming%20refers%20to%20the,warehouses%2C%20and%20abandoned%20mine%20shafts.",
+  ],
+  [
+    "name" => "Soil Health Sensor",
+    "description" => "Real-time monitoring of soil moisture, nutrient levels, and pH to make informed decisions about fertilization ",
+    "category" => "Water Management",
+    "image" => "../photos/home/soil health.jpg",
+    "icon" => "🐞",
+    "link" => "https://www.renkeer.com/5-types-soil-sensors/",
+  ]
+];
+$categories = [
+  "All",
+  "Water Management",
+  "Automation",
+  "Data & Monitoring",
+  "Indoor Farming",
+  "Sustainability"
+];
+
+$selected_category = isset($_GET['category']) ? $_GET['category'] : "All";
+$search_query = isset($_GET['search']) ? strtolower(trim($_GET['search'])) : "";
+
+// Filter technologies by category and search
+$filtered_technologies = array_filter($technologies, function($tech) use ($selected_category, $search_query) {
+    $matches_category = ($selected_category === "All") || ($tech['category'] === $selected_category);
+    $matches_search = empty($search_query) || (strpos(strtolower($tech['name']), $search_query) !== false) || (strpos(strtolower($tech['description']), $search_query) !== false);
+    return $matches_category && $matches_search;
+});
+// Modal logic
+$show_modal = false;
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $farmSize = $_POST['farmSize'] ?? '';
+    $crops = $_POST['crops'] ?? '';
+    $challenges = $_POST['challenges'] ?? '';
+
+    // --- Gemini API key ---
+    $api_key = "AIzaSyApehQ1TkiRU0_WMjlvavHUPyzKIxBoli8"; // <-- put your Gemini API key here
+    
+    // --- Prepare the user prompt ---
+    $user_prompt = "You are an agriculture expert. A farmer has a farm size of $farmSize, grows $crops, and is facing the following challenges: $challenges. 
+    Give them helpful advice about farming best practices, pest prevention, and irrigation scheduling. 
+    Keep it short and easy to understand.";
+
+    // --- Call Gemini API ---
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$api_key";
+
+    $data = [
+        "contents" => [
+            [
+                "parts" => [
+                    ["text" => $user_prompt]
+                ]
+            ]
+        ]
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $result = json_decode($response, true);
+
+    // --- Extract chatbot response ---
+    if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+        $recommendation_html = nl2br(htmlspecialchars($result['candidates'][0]['content']['parts'][0]['text']));
+    } else {
+        $recommendation_html = "Sorry, I couldn't fetch a recommendation at the moment.";
+    }
+    $show_modal = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Farm Tech - AgriGrow</title>
-  <link rel="icon" href="../photos/home/favicon2.svg" type="image/svg+xml">
-  <link href="./output.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./homecss.css" />
-
-  <style>
-    .slide-info {
-      transition: transform 0.5s ease, opacity 0.5s ease;
-      transform: translateX(100%);
-      opacity: 0;
-      position: absolute;
-      top: 14rem;
-      right: 2rem;
-      width: 90%;
-      max-width: 420px;
-      z-index: 10;
-    }
-
-    .slide-info.show {
-      transform: translateX(0%);
-      opacity: 1;
-    }
-  </style>
-
-  <script>
-    function toggleTechInfo() {
-      const info = document.getElementById("techInfo");
-      info.classList.toggle("show");
-    }
-  </script>
+  <meta charset="UTF-8">
+  <title>AgriGrow - Farm Technologies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-900 min-h-screen flex flex-col">
 
-
-<body class="font-mono bg-gray-950 text-white relative">
-
-
-
-<header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
+  <!-- Header -->
+  <header class="flex justify-between items-center bg-gray-900 h-15 sticky z-20  top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
         <a href="./homePage.php" class="flex items-center gap-2">
             <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-            <h3 class="">AgriGrow</h3>
+            <h3 class="font-bold text-white text-xl">AgriGrow</h3>
         </a>
     </div>
-
-    <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="hover:text-white">Home</a>
-        <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-        <a href="./blog.php" class="hover:text-white">Blog</a>
-        
+    <div class="text-gray-300 flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
+        <a href="./homePage.php" class="hover:text-lime-400">Home</a>
+        <a href="./SUNSIDIES.php" class="hover:text-lime-400">Subsidies</a>
+        <a href="#blogs" class="hover:text-lime-400">Blog</a>
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-            <a href="./profile.php" class="hover:text-white">Profile</a>
+            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
+                <a href="./admin_subsidies.php" class="hover:text-lime-400">Admin Panel</a>
+                <a href="./logout.php" class="hover:text-red-400 text-red-400">Logout</a>
+            <?php else: ?>
+                <a href="./profile.php" class="hover:text-lime-400">Profile</a>
+            <?php endif; ?>
         <?php else: ?>
-            <a href="./login.php" class="hover:text-white">Login</a>
+            <a href="./login.php" class="hover:text-lime-400">Login</a>
         <?php endif; ?>
     </div>
-</header>
-    <!-- Content Section -->
-    <section class="p-10 flex flex-col items-center text-center gap-5 relative">
-      <h1 class="text-5xl font-bold text-lime-400">Farm Tech</h1>
-      <p class="max-w-4xl text-lg text-gray-300">
-        Discover how technology is transforming farming for the better. From smart sensors and automated irrigation to AI-powered analytics, Farm Tech is at the heart of modern sustainable agriculture.
-      </p>
+  </header>
 
-      <div class="flex flex-col lg:flex-row justify-around items-center gap-10">
-        <img src="../photos/home/farm_tech.svg" alt="Farm Tech"
-          class="h-48 w-auto mt-5 rounded-xl transition-transform duration-500 hover:scale-105">
-
-        <div class="mt-10 max-w-5xl text-left">
-          <h2 class="text-2xl font-bold mb-3">🔍 What We Offer:</h2>
-          <ul class="list-disc list-inside text-gray-300 space-y-2">
-            <li>Precision agriculture tools and techniques</li>
-            <li>Data-driven crop monitoring systems</li>
-            <li>Smart irrigation solutions</li>
-            <li>IoT integration for real-time data</li>
-          </ul>
+  <main class="flex-1">
+    <!-- Hero Section -->
+    <section class="p-8">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <!-- Left: Heading and Description -->
+        <div>
+          <span class="text-white font-bold text-lg">AI-Powered Assistance</span>
+          <h1 class="text-5xl font-extrabold mt-4 mb-4 leading-tight text-white">Smarter Farming Starts Here</h1>
+          <p class="text-gray-300 text-lg mb-2">
+            Get personalized technology recommendations for your farm. Simply describe your operation and challenges, and our AI will suggest solutions to boost your productivity and sustainability.
+          </p>
+        </div>
+        <!-- Right: Form Card -->
+        <div>
+          <div class="bg-gray-800 p-8 rounded-xl shadow-lg ">
+            <h2 class="font-bold text-2xl mb-2 text-white">Find Your Farming Solution</h2>
+            <p class="text-sm text-gray-400 mb-6">Fill out the form below to get started.</p>
+            <form method="POST" class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-gray-200 font-semibold mb-1" for="farmSize">Farm Size (in acres)</label>
+                  <input type="text" name="farmSize" id="farmSize" placeholder="e.g., 500" class="border border-gray-600 bg-gray-900 text-gray-100 p-3 rounded w-full" required>
+                </div>
+                <div>
+                  <label class="block text-gray-200 font-semibold mb-1" for="crops">Crops Grown</label>
+                  <input type="text" name="crops" id="crops" placeholder="e.g., Corn, Soybeans, Wheat" class="border border-gray-600 bg-gray-900 text-gray-100 p-3 rounded w-full" required>
+                </div>
+              </div>
+              <div>
+                <label class="block text-gray-200 font-semibold mb-1" for="challenges">Your Challenges</label>
+                <textarea name="challenges" id="challenges" rows="3" placeholder="Describe your main challenges, e.g., 'pest control for corn' or 'managing irrigation during dry seasons'." class="border border-gray-600 bg-gray-900 text-gray-100 p-3 rounded w-full" required></textarea>
+              </div>
+              <p class="text-xs text-gray-400 mb-2">The more detail you provide, the better the recommendations.</p>
+              <button type="submit" class="px-6 py-3 bg-lime-500 hover:bg-lime-600 text-white rounded font-semibold w-full flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m4 0h-1v-4h-1m4 0h-1v-4h-1m4 0h-1v-4h-1" /></svg>
+                Get AI Recommendations
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-
-      <!-- Toggle Button -->
-      <button onclick="toggleTechInfo()" class="mt-6 bg-lime-500 hover:bg-lime-600 text-black font-semibold px-5 py-2 rounded-xl transition duration-300">
-        Show More Tech Benefits
-      </button>
-
-      <!-- Slide-out Panel -->
-      <div id="techInfo" class="slide-info bg-gray-800 p-6 rounded-2xl shadow-xl text-left">
-        <h2 class="text-xl font-bold text-white mb-3">🌐 Advanced Farm Tech Perks</h2>
-        <ul class="text-gray-300 space-y-3">
-          <li>📡 Satellite-driven yield mapping</li>
-          <li>🌦️ Climate-smart crop prediction AI</li>
-          <li>🔋 Solar-powered IoT sensor kits</li>
-          <li>📲 Remote control for irrigation/fertilization</li>
-        </ul>
-      </div>
-
-      <!-- Push footer down with dummy content -->
-      <div class="mt-20 max-w-4xl text-left">
-        <h2 class="text-3xl font-semibold text-lime-400 mb-4">Why It Matters</h2>
-        <p class="text-gray-300 mb-6">
-          Technological innovation in agriculture ensures more food production with fewer resources. It helps reduce waste, monitor soil health, and make timely decisions that can boost yield and protect the environment.
-        </p>
-        <p class="text-gray-300">
-          Farmers can now receive real-time alerts, automate crop cycles, and make smarter, data-driven decisions. With Farm Tech, the future of agriculture is not just smart—it's sustainable and scalable.
-        </p>
-      </div>
-
     </section>
+
+    <!-- Modal Popup -->
+    <?php if ($show_modal): ?>
+      <div id="recommendation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+        <div class="bg-gray-900 rounded-2xl shadow-xl max-w-2xl w-full mx-4 p-8  relative">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lime-400 text-2xl">🤖</span>
+            <h3 class="font-bold text-xl text-white">Your Personalized Tech Recommendations</h3>
+          </div>
+          <p class="text-gray-400 mb-4">Based on your farm's details, here are some technologies that could help.</p>
+          <div class="max-h-96 overflow-y-auto text-gray-200">
+            <?= $recommendation_html ?>
+          </div>
+          <form method="POST">
+            <button type="submit" name="close_modal" class="mt-6 px-6 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded font-semibold float-right">Close</button>
+          </form>
+        </div>
+      </div>
+      <script>
+        document.body.style.overflow = 'hidden';
+      </script>
+    <?php endif; ?>
+    <?php
+    if (isset($_POST['close_modal'])) {
+      echo "<script>window.location.href = window.location.pathname;</script>";
+      exit;
+    }
+    ?>
+
+    <!-- Tech Showcase -->
+    <section class="p-6 bg-gray-900">
+      <div class="max-w-4xl mx-auto text-center mb-8">
+        <h2 class="text-3xl font-extrabold text-white mb-2">Explore Farm Technologies</h2>
+        <p class="text-gray-300 text-lg">Discover innovative tools and solutions to boost your farm's productivity and sustainability.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 justify-center mb-8">
+        <!-- Search Bar -->
+        <form method="GET" class="flex items-center gap-3">
+          <input
+            type="text"
+            name="search"
+            value="<?= htmlspecialchars($search_query) ?>"
+            placeholder="Search technologies..."
+            class="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-100 w-64 focus:outline-none focus:border-lime-400"
+          />
+          <?php if ($selected_category !== "All"): ?>
+            <input type="hidden" name="category" value="<?= htmlspecialchars($selected_category) ?>">
+          <?php endif; ?>
+          <button type="submit" class="hidden"></button>
+        </form>
+        <!-- Category Links -->
+        <a href="?category=All<?= $search_query ? '&search=' . urlencode($search_query) : '' ?>"
+           class="bg-lime-500 text-white rounded-full px-4 py-2 font-semibold flex items-center gap-2 <?= ($selected_category === 'All') ? '' : 'hover:bg-lime-600' ?>">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6.414 6.414A1 1 0 0013 14.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 007 17V14.414a1 1 0 00-.293-.707L3.293 6.707A1 1 0 013 6V4z" /></svg>
+          All
+        </a>
+        <?php foreach ($categories as $cat): ?>
+          <?php if ($cat === "All") continue; ?>
+          <a href="?category=<?= urlencode($cat) ?><?= $search_query ? '&search=' . urlencode($search_query) : '' ?>"
+             class="px-4 py-2 rounded-full border border-gray-600 bg-gray-800 text-gray-100 font-semibold <?= ($selected_category === $cat) ? 'border-lime-400 text-lime-400' : 'hover:border-lime-400 hover:text-lime-400' ?>">
+            <?= $cat ?>
+          </a>
+        <?php endforeach; ?>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <?php if (empty($filtered_technologies)): ?>
+          <div class="col-span-2 text-center text-gray-400 py-8">
+            No technologies found for your search or filter.
+          </div>
+        <?php else: ?>
+          <?php foreach ($filtered_technologies as $tech): ?>
+            <div class="p-4 rounded-md bg-gray-800">
+              <div class="flex gap-2 items-center mb-2">
+                <span class="text-2xl"><?= $tech['icon'] ?></span>
+                <div>
+                  <h3 class="font-bold text-lg text-white"><?= htmlspecialchars($tech['name']) ?></h3>
+                  <span class="px-2 py-1 bg-gray-900 text-lime-400 text-xs rounded"><?= htmlspecialchars($tech['category']) ?></span>
+                </div>
+              </div>
+              <img src="<?= $tech['image'] ?>" alt="<?= htmlspecialchars($tech['name']) ?>" class="w-full h-40 object-cover mb-2 rounded" />
+              <p class="text-sm text-gray-300"><?= htmlspecialchars($tech['description']) ?></p>
+              <div class="mt-4">
+  <a href="<?= $tech['link'] ?>" 
+     target="_blank" 
+     rel="noopener noreferrer"
+     class="px-4 py-2 bg-lime-500 hover:bg-lime-600 text-white rounded-b-lg w-full text-center block">
+    Learn More
+  </a>
+</div>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+<!-- Testimonials -->
+<section class="p-6">
+  <h2 class="text-4xl font-extrabold text-center text-white mb-2">
+    Success Stories from the Field
+  </h2>
+  <p class="text-center text-gray-400 mb-10 text-lg">
+    See how farmers are using technology to transform their operations and increase their yields.
+  </p>
+
+  <div class="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+    <?php foreach ($testimonials as $t): ?>
+      <div class="bg-gray-800 rounded-xl shadow-lg p-6">
+        
+        <!-- Avatar + Name/Title -->
+        <div class="flex items-center space-x-4 mb-4">
+          <img 
+            src="<?= $t['image'] ?>" 
+            alt="<?= htmlspecialchars($t['name']) ?>" 
+            class="w-12 h-12 rounded-full"
+          />
+          <div>
+            <p class="font-bold text-white"><?= htmlspecialchars($t['name']) ?></p>
+            <p class="text-gray-400 text-sm"><?= htmlspecialchars($t['title']) ?></p>
+          </div>
+        </div>
+
+        <!-- Quote -->
+        <blockquote class="text-gray-300 italic leading-relaxed">
+          "<?= htmlspecialchars($t['quote']) ?>"
+        </blockquote>
+      </div>
+    <?php endforeach; ?>
   </div>
+</section>
+
+
+  </main>
 
   <!-- Footer -->
-  <footer class="bg-gray-900 py-4 w-full">
-    <div class="text-center text-gray-400">
-      © 2025 AgriGrow. All rights reserved.
-    </div>
+  <footer class="bg-gray-900  mt-8 text-center p-4 text-xs text-gray-400">
+    &copy; <?= date('Y') ?> AgriGrow. All rights reserved.
   </footer>
-
 </body>
 </html>

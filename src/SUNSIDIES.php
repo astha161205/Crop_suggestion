@@ -62,36 +62,7 @@ $categories_result = $conn->query($categories_query);
 $states_query = "SELECT DISTINCT state FROM subsidies WHERE status = 'active'";
 $states_result = $conn->query($states_query);
 
-// Handle application submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-        $subsidy_id = $_POST['subsidy_id'];
-        $user_email = $_SESSION['user_email'];
-        
-        // Check if already applied
-        $check_query = "SELECT * FROM user_applications WHERE user_email = ? AND subsidy_id = ?";
-        $check_stmt = $conn->prepare($check_query);
-        $check_stmt->bind_param("si", $user_email, $subsidy_id);
-        $check_stmt->execute();
-        
-        if ($check_stmt->get_result()->num_rows == 0) {
-            // Insert application
-            $insert_query = "INSERT INTO user_applications (user_email, subsidy_id) VALUES (?, ?)";
-            $insert_stmt = $conn->prepare($insert_query);
-            $insert_stmt->bind_param("si", $user_email, $subsidy_id);
-            
-            if ($insert_stmt->execute()) {
-                $success_message = "Application submitted successfully!";
-            } else {
-                $error_message = "Error submitting application.";
-            }
-        } else {
-            $error_message = "You have already applied for this subsidy.";
-        }
-    } else {
-        $error_message = "Please login to apply for subsidies.";
-    }
-}
+// Note: Application submission is now handled in my_applications.php
 ?>
 
 <!DOCTYPE html>
@@ -147,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
     <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
         <a href="./homePage.php" class="<?php echo $theme['hover']; ?>">Home</a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>">Subsidies</a>
-        <a href="./blog.php" class="<?php echo $theme['hover']; ?>">Blog</a>
+        <a href="#blogs" class="<?php echo $theme['hover']; ?>">Blog</a>
         
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
@@ -188,23 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
         </p>
     </div>
 
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 max-w-5xl mx-auto">
-        <div class="stats-card p-6 mt-4 rounded-xl text-white">
-            <div class="text-2xl font-bold"><?php echo $result->num_rows; ?></div>
-            <div class="text-sm opacity-90">Active Schemes</div>
-        </div>
-        
-        <div class=" <?php echo $theme['bg_card']; ?> p-6 rounded-xl">
-            <div class="text-2xl font-bold text-blue-400">All India</div>
-            <div class="text-sm text-gray-400">Coverage</div>
-        </div>
-        <div class=" <?php echo $theme['bg_card']; ?> p-6 rounded-xl">
-            <div class="text-2xl font-bold text-purple-400">24/7</div>
-            <div class="text-sm text-gray-400">Support</div>
-        </div>
-    </div>
-
     <!-- Search and Filter Section -->
     <div class="filter-section p-6 rounded-xl mb-8 max-w-5xl mx-auto">
         <form method="GET" class="space-y-4">
@@ -230,17 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
                 </div>
                 
                 <!-- State Filter -->
-                <div>
-                    <select name="state" class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:border-lime-500">
-                        <option value="">All States</option>
-                        <?php while ($state = $states_result->fetch_assoc()): ?>
-                            <option value="<?php echo htmlspecialchars($state['state']); ?>"
-                                    <?php echo $state_filter === $state['state'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($state['state']); ?>
-                            </option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
+                
             </div>
             
             <div class="flex justify-between items-center">
@@ -310,13 +254,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['apply_subsidy'])) {
 
                 <!-- Action Buttons -->
                 <div class="flex gap-2">
-                    <form method="POST" class="flex-1">
-                        <input type="hidden" name="subsidy_id" value="<?php echo $subsidy['id']; ?>">
-                        <button type="submit" name="apply_subsidy" 
-                                class="w-full bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded-lg transition-colors">
-                            <i class="fas fa-paper-plane mr-2"></i>Apply Now
-                        </button>
-                    </form>
+                    <a href="my_applications.php?subsidy_id=<?php echo $subsidy['id']; ?>" 
+                       class="flex-1 bg-lime-500 hover:bg-lime-600 text-white px-4 py-2 rounded-lg transition-colors text-center">
+                        <i class="fas fa-paper-plane mr-2"></i>Apply Now
+                    </a>
                     
                     <a href="<?php echo htmlspecialchars($subsidy['website_url']); ?>" 
                        target="_blank"
