@@ -457,28 +457,28 @@ function getProfileImage($profileData) {
                     </div>
                     
                     <!-- Language Settings Section -->
-                    <div class="mb-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        <h3 class="text-lg font-semibold mb-4 <?php echo $theme['text']; ?>"><?php echo __('language_settings'); ?></h3>
+                    <!-- <div class="mb-8 p-6 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4 </h3>
                         <div class="flex items-center justify-center gap-4">
-                            <span class="<?php echo $theme['text_secondary']; ?>"><?php echo __('current_language'); ?>:</span>
-                            <span class="font-semibold <?php echo $theme['text']; ?>">
-                                <?php echo getCurrentLanguageDisplayName(); ?>
+                            <span class=":</span>
+                            <span class="font-semibold ">
+                                
                             </span>
                             <form method="POST" class="inline" data-language-toggle>
                                 <input type="hidden" name="toggle_language" value="1">
                                 <input type="hidden" name="redirect_url" value="profile.php">
-                                <button type="submit" class="<?php echo $theme['button_primary']; ?> text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
+                                <button type="submit" class=" text-white px-6 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2">
                                     <i class="fas fa-language"></i>
-                                    <?php echo __('switch_language'); ?> <?php echo getCurrentLanguage() === 'en' ? 'हिंदी' : 'English'; ?>
+                                    
                                 </button>
                             </form>
                         </div>
                         <div class="mt-4 text-center">
-                            <p class="text-sm <?php echo $theme['text_secondary']; ?>">
-                                <?php echo __('language_description'); ?>
+                            <p class="text-sm <gua?php echo $theme['text_secondary']; ?>">
+                               
                             </p>
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="./my_applications.php" 

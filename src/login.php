@@ -184,10 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                             <input type="radio" name="user_type" value="user" checked class="mr-2">
                             <span class="text-sm"><?php echo __('user'); ?></span>
                         </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="user_type" value="admin" class="mr-2">
-                            <span class="text-sm"><?php echo __('admin'); ?></span>
-                        </label>
+                        
                     </div>
                     
                     <input type="email" name="email" placeholder="<?php echo __('email'); ?>" class="bg-gray-100 border-none my-2 py-2.5 px-4 text-sm rounded-lg w-full outline-none">

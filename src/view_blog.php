@@ -87,21 +87,14 @@ $content = nl2br(htmlspecialchars($blog['content']));
         </div>
 
         <!-- Blog header -->
-        <div class="flex items-center text-sm text-gray-400 mb-4">
-            <?php if (!empty($blog['tags'])): ?>
-                <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">
-                    <?php echo htmlspecialchars(explode(',', $blog['tags'])[0]); ?>
-                </span>
-            <?php endif; ?>
-            <span><?php echo $formatted_date; ?></span>
-            <?php if (!empty($blog['author_name'])): ?>
-                <span class="ml-4">by <?php echo htmlspecialchars($blog['author_name']); ?></span>
-            <?php endif; ?>
-        </div>
+        
 
         <!-- Blog title -->
-        <h1 class="text-3xl font-bold mb-6"><?php echo htmlspecialchars($blog['title']); ?></h1>
-
+        <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($blog['title']); ?></h1>
+        <div class="flex items-center text-sm text-gray-400 mb-4">
+            
+            <span><?php echo $formatted_date; ?></span>
+        </div>
         <!-- Cover image -->
         <img src="<?php echo htmlspecialchars($blog['cover_image_url']); ?>" 
              alt="<?php echo htmlspecialchars($blog['title']); ?>" 
@@ -129,27 +122,7 @@ $content = nl2br(htmlspecialchars($blog['content']));
             </div>
         <?php endif; ?>
 
-        <!-- Share section -->
-        <div class="mt-8 pt-6 border-t border-gray-700">
-            <h3 class="text-lg font-bold text-lime-300 mb-3">Share this blog:</h3>
-            <div class="flex gap-4">
-                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
-                   target="_blank" 
-                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300">
-                    <i class="fab fa-facebook-f mr-2"></i>Facebook
-                </a>
-                <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($blog['title']); ?>&url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
-                   target="_blank" 
-                   class="bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300">
-                    <i class="fab fa-twitter mr-2"></i>Twitter
-                </a>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
-                   target="_blank" 
-                   class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition duration-300">
-                    <i class="fab fa-linkedin-in mr-2"></i>LinkedIn
-                </a>
-            </div>
-        </div>
+        
     </article>
 </main>
 
@@ -161,3 +134,4 @@ $content = nl2br(htmlspecialchars($blog['content']));
 
 </body>
 </html>
+

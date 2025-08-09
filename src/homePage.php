@@ -44,11 +44,14 @@ try {
 
 .box {
   width: 350px;
-  background-color: #fff;
+  background-color: transparent; /* remove white background */
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease;
+  height: 350px;                /* force equal card heights */
+  display: flex;                /* stack image + caption */
+  flex-direction: column;
 }
 .caption {
   color: white;
@@ -61,11 +64,15 @@ try {
   width: 100%;
   height: 220px;
   object-fit: cover;
+  display: block;              /* remove bottom whitespace gap */
 }
 
 .caption {
   padding: 18px;
   text-align: left;
+  display: flex;               /* space title and link */
+  flex-direction: column;
+  flex: 1;                     /* fill remaining height */
 }
 
 .caption h3 {
@@ -73,17 +80,44 @@ try {
   font-weight: bold;
   margin-bottom: 10px;
   color: #333;
+  display: -webkit-box;        /* clamp long titles */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 48px;            /* keep consistent height area for title */
 }
 
 .caption a {
   text-decoration: none;
   color: white;
   font-weight: bold;
+  margin-top: auto;            /* pin link to bottom of caption area */
 }
 
 .caption a:hover {
   text-decoration: underline;
 }
+/* Target the outer footer wrapper */
+footer, 
+.flex.flex-col.items-center.mt-10.mb-0.bg-gray-800 {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* Target the copyright container */
+.flex.w-full.text-center.justify-center {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    line-height: 1.2; /* reduces extra text spacing */
+}
+
+/* Target the copyright text */
+.flex.w-full.text-center.justify-center p {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
 </style>
 </head>
 <body class="font-mono <?php echo $theme['bg']; ?> <?php echo $theme['text']; ?> relative">
@@ -252,6 +286,12 @@ try {
             <img src="../photos/home/support.svg" alt="support" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">Support</p>
         </a>
+        <!-- Feedback -->
+        <a href="./feedback.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+            <img src="../photos/home/feed.webp" alt="feedback" class="h-32 w-32 mb-4">
+            <p class="text-lg font-medium">Feedback</p>
+        </a>
+
     </div>
 </div>
 
@@ -262,12 +302,61 @@ try {
 
         <!-- Heading -->
         <h2 class="text-4xl font-bold text-center mb-4">
-            Our Latest <span class="text-green-600">Blogs</span>
+            People's Latest <span class="text-green-600">Blogs</span>
         </h2>
         <p class=" text-center mt-2 max-w-2xl mx-auto">
             Discover insights on sustainable farming, investment opportunities, and industry trends.
-            Explore our latest articles for expert advice and practical tips.
+            Explore some of the latest articles for expert advice and practical tips.
         </p>
+
+        <div style="text-align: center; margin-top: 24px; margin-bottom: 8px;">
+    <button
+        type="button"
+        onclick="window.location.href='./write_blog.php'"
+        style="
+            background-color: #65a30d; /* lime-600 */
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        "
+        onmouseover="this.style.backgroundColor='#4d7c0f'"
+        onmouseout="this.style.backgroundColor='#65a30d'"
+    >
+        <i class="fas fa-pen-fancy" style="margin-right: 8px;"></i>
+        Write Your Own Blog
+    </button>
+    <button
+        type="button"
+        onclick="window.location.href='./blog.php'"
+        style="
+            background-color: #65a30d; /* lime-600 */
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        "
+        onmouseover="this.style.backgroundColor='#4d7c0f'"
+        onmouseout="this.style.backgroundColor='#65a30d'"
+    >
+        <i class="fas fa-pen-fancy" style="margin-right: 8px;"></i>
+        Read More Blogs
+    </button>
+</div>
 
         <div class="container">
             <?php if (empty($latest_blogs)): ?>
@@ -309,8 +398,8 @@ try {
         </div>
 
 </div>
-
-    <div class="flex items-center mt-20 gap-10 justify-between ml-10 mr-10 ">
+<div class="flex flex-col items-center mt-10 mb-0  bg-gray-800">
+    <div class="flex items-center m-5  gap-20 justify-between ml-30 mr-30 w-40">
 
         
 
@@ -324,7 +413,7 @@ try {
         </div>
 
         <div class="Services_link  flex flex-col" >
-            <h1 class="text-center"><?php echo __('our_services'); ?></h1>
+            <h1 ><?php echo __('our_services'); ?></h1>
             <div class="flex flex-col gap-2 mt-3">
                 <a href="./crop_recom.php"><?php echo __('crop_recommendation'); ?></a>
                 <a href="./weather.php"><?php echo __('weather_alerts'); ?></a>
@@ -343,14 +432,15 @@ try {
         </div>
         
     </div>
-    
-    
-</div>
-    <footer class="  <?php echo $theme['bg_card']; ?>    w-full">
-        <div class="flex  ">
+    <div class="flex  w-full text-center justify-center">
             <p class="p-2">© 2025 AgriGrow. <?php echo __('all_rights_reserved'); ?></p>
         </div>
-    </footer>
+    </div>
+    
+
+    
+        
+    
 
 
 

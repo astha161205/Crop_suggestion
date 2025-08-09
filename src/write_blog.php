@@ -26,25 +26,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cover_image_url = trim($_POST['cover_image_url']);
     $content = trim($_POST['content']);
     $tags = trim($_POST['tags']);
-    
-    // Validation
+
     $errors = [];
     if (empty($title)) $errors[] = "Blog title is required";
-    if (empty($cover_image_url)) $errors[] = "Cover image URL is required";
     if (empty($content)) $errors[] = "Blog content is required";
-    
-            if (empty($errors)) {
-            try {
-                $stmt = $pdo->prepare("INSERT INTO blogs (title, cover_image_url, content, tags, author_id, author_name) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->execute([$title, $cover_image_url, $content, $tags, null, $_SESSION['user_name']]);
-                
-                $success_message = "Blog published successfully!";
-                // Clear form data after successful submission
-                $title = $cover_image_url = $content = $tags = '';
-            } catch(PDOException $e) {
-                $errors[] = "Error publishing blog: " . $e->getMessage();
+
+    // Image: allow either URL or file upload
+    $hasFile = isset($_FILES['cover_image_file']) && isset($_FILES['cover_image_file']['tmp_name']) && $_FILES['cover_image_file']['error'] === UPLOAD_ERR_OK;
+    if (!$hasFile && empty($cover_image_url)) {
+        $errors[] = "Please provide a cover image URL or upload an image.";
+    }
+
+    $cover_image_to_save = $cover_image_url; // default to provided URL
+
+    // If a file is uploaded, validate and store it
+    if ($hasFile) {
+        $allowedExt = ['jpg','jpeg','png','webp'];
+        $originalName = $_FILES['cover_image_file']['name'];
+        $tmpPath = $_FILES['cover_image_file']['tmp_name'];
+        $sizeBytes = (int)$_FILES['cover_image_file']['size'];
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+        if (!in_array($ext, $allowedExt, true)) {
+            $errors[] = "Invalid image type. Allowed: JPG, JPEG, PNG, WEBP.";
+        }
+
+        // Basic image check
+        $imgInfo = @getimagesize($tmpPath);
+        if ($imgInfo === false) {
+            $errors[] = "Uploaded file is not a valid image.";
+        }
+
+        // Size limit ~5MB
+        if ($sizeBytes > 5 * 1024 * 1024) {
+            $errors[] = "Image too large. Max size is 5MB.";
+        }
+
+        if (empty($errors)) {
+            $uploadsDir = __DIR__ . '/uploads/blogs';
+            if (!is_dir($uploadsDir)) {
+                @mkdir($uploadsDir, 0775, true);
+            }
+            $safeBase = 'blog_' . time() . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
+            $destPath = $uploadsDir . '/' . $safeBase;
+
+            if (@move_uploaded_file($tmpPath, $destPath)) {
+                // Public URL relative to src/
+                $cover_image_to_save = './uploads/blogs/' . $safeBase;
+            } else {
+                $errors[] = "Failed to save the uploaded image. Please try again.";
             }
         }
+    }
+
+    if (empty($errors)) {
+        try {
+            $stmt = $pdo->prepare("INSERT INTO blogs (title, cover_image_url, content, tags, author_id, author_name) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $cover_image_to_save, $content, $tags, null, $_SESSION['user_name']]);
+
+            $success_message = "Blog published successfully!";
+            // Clear form data after successful submission
+            $title = $cover_image_url = $content = $tags = '';
+            // Optionally redirect to blog list
+            // header('Location: blog.php'); exit;
+        } catch(PDOException $e) {
+            $errors[] = "Error publishing blog: " . $e->getMessage();
+        }
+    }
 }
 ?>
 
@@ -99,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST" class="space-y-6">
+        <form method="POST" class="space-y-6" enctype="multipart/form-data">
             <div>
                 <label for="title" class="block text-sm font-medium text-gray-300 mb-2">Blog Title *</label>
                 <input type="text" id="title" name="title" value="<?php echo isset($title) ? htmlspecialchars($title) : ''; ?>" 
@@ -108,11 +156,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div>
-                <label for="cover_image_url" class="block text-sm font-medium text-gray-300 mb-2">Cover Image URL *</label>
-                <input type="url" id="cover_image_url" name="cover_image_url" value="<?php echo isset($cover_image_url) ? htmlspecialchars($cover_image_url) : ''; ?>" 
-                       class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-lime-500 text-white" 
-                       placeholder="https://example.com/image.jpg" required>
-                <p class="text-sm text-gray-500 mt-1">You can use any image URL or upload to a service like Imgur</p>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Cover Image</label>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="cover_image_url" class="block text-xs text-gray-400 mb-1">Use an Image URL</label>
+                        <input type="url" id="cover_image_url" name="cover_image_url" value="<?php echo isset($cover_image_url) ? htmlspecialchars($cover_image_url) : ''; ?>" 
+                               class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-lime-500 text-white" 
+                               placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div>
+                        <label for="cover_image_file" class="block text-xs text-gray-400 mb-1">Or upload an image (JPG, PNG, WEBP, max 5MB)</label>
+                        <input type="file" id="cover_image_file" name="cover_image_file" accept="image/jpeg,image/png,image/webp" 
+                               class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-lime-500 text-white">
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">Provide either a URL or upload a file. If both are provided, the uploaded file will be used.</p>
             </div>
 
             <div>
@@ -120,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <textarea id="content" name="content" rows="15" 
                           class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-lime-500 text-white resize-vertical" 
                           placeholder="Write your blog content here..." required><?php echo isset($content) ? htmlspecialchars($content) : ''; ?></textarea>
-                <p class="text-sm text-gray-500 mt-1">You can use basic formatting like line breaks and paragraphs</p>
+                
             </div>
 
             <div>
@@ -141,23 +199,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
 
-        <div class="mt-8 p-6 bg-gray-800 rounded-lg">
-            <h3 class="text-lg font-bold text-lime-300 mb-3">Writing Tips:</h3>
-            <ul class="text-gray-300 space-y-2">
-                <li>• Start with a compelling introduction to grab readers' attention</li>
-                <li>• Use clear, simple language that farmers can understand</li>
-                <li>• Include practical tips and real-world examples</li>
-                <li>• Break up long paragraphs for better readability</li>
-                <li>• Add relevant images to illustrate your points</li>
-                <li>• End with actionable takeaways for your readers</li>
-            </ul>
-        </div>
+        
     </div>
 </main>
 
-<footer class="bg-gray-900 mt-5 w-full">
-    <div class="flex justify-center items-center">
-        <p>© 2021 AgriGrow. All rights reserved</p>
+<footer class="bg-gray-900 mt-5 w-full p-2">
+    <div class="flex ">
+        <p>© 2025 AgriGrow. All rights reserved</p>
     </div>
 </footer>
 

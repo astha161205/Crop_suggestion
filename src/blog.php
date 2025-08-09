@@ -58,15 +58,33 @@ try {
 </header>
 
 <main class="container mx-auto px-4 py-12 max-w-4xl">
-    <!-- Write Your Own Blog Button -->
-    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-        <div class="text-center mb-12">
-            <a href="./write_blog.php" class="inline-flex items-center bg-lime-600 hover:bg-lime-700 text-white font-bold py-4 px-8 rounded-lg transition duration-300 text-lg">
-                <i class="fas fa-pen-fancy mr-3"></i>
-                Write Your Own Blog
-            </a>
-        </div>
-    <?php endif; ?>
+    <!-- Write Your Own Blog Button (always visible; write_blog.php will redirect to login if needed) -->
+    <div style="text-align: center; margin-bottom: 15px;">
+    <button
+        type="button"
+        onclick="window.location.href='./write_blog.php'"
+        style="
+            background-color: #65a30d; /* lime-600 */
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        "
+        onmouseover="this.style.backgroundColor='#4d7c0f'"
+        onmouseout="this.style.backgroundColor='#65a30d'"
+    >
+        <i class="fas fa-pen-fancy" style="margin-right: 8px;"></i>
+        Write Your Own Blog
+    </button>
+</div>
+
 
     <!-- Blog Posts -->
     <?php if (empty($blogs)): ?>
@@ -91,20 +109,15 @@ try {
     <?php else: ?>
         <?php foreach ($blogs as $blog): ?>
             <article class="bg-gray-900 rounded-2xl p-8 mb-16">
+                
+                
+                <h1 class="text-3xl font-bold mb-2"><?php echo htmlspecialchars($blog['title']); ?></h1>
                 <div class="flex items-center text-sm text-gray-400 mb-4">
                     <?php if (!empty($blog['tags'])): ?>
-                        <span class="bg-lime-400/20 text-lime-300 px-3 py-1 rounded-full mr-4">
-                            <?php echo htmlspecialchars(explode(',', $blog['tags'])[0]); ?>
-                        </span>
+                        
                     <?php endif; ?>
                     <span><?php echo date('F j, Y', strtotime($blog['created_at'])); ?></span>
-                    <?php if (!empty($blog['author_name'])): ?>
-                        <span class="ml-4">by <?php echo htmlspecialchars($blog['author_name']); ?></span>
-                    <?php endif; ?>
                 </div>
-                
-                <h1 class="text-3xl font-bold mb-6"><?php echo htmlspecialchars($blog['title']); ?></h1>
-                
                 <img src="<?php echo htmlspecialchars($blog['cover_image_url']); ?>" 
                      alt="<?php echo htmlspecialchars($blog['title']); ?>" 
                      class="w-full h-96 object-cover rounded-xl mb-8">
@@ -141,3 +154,4 @@ try {
 
 </body>
 </html>
+

@@ -1,5 +1,11 @@
 <?php
 session_start();
+// Load .env (optional) so GEMINI_API_KEY can be stored in a .env file at project root
+@require_once __DIR__ . '/../vendor/autoload.php';
+if (class_exists('Dotenv\\Dotenv')) {
+  $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+  $dotenv->safeLoad();
+}
 // Dummy testimonials and technologies arrays
 $testimonials = [
   [
@@ -96,6 +102,65 @@ $filtered_technologies = array_filter($technologies, function($tech) use ($selec
     $matches_search = empty($search_query) || (strpos(strtolower($tech['name']), $search_query) !== false) || (strpos(strtolower($tech['description']), $search_query) !== false);
     return $matches_category && $matches_search;
 });
+// Helper: local fallback recommendation (no external API required)
+function generateLocalRecommendation(string $farmSize, string $crops, string $challenges, array $technologies): string {
+    $advice = [];
+    $lowerChallenges = strtolower($challenges);
+
+    if (preg_match('/water|irrig|drought|moisture/', $lowerChallenges)) {
+        $advice[] = 'Consider precision irrigation and soil-moisture sensors to optimize water use and reduce stress during dry periods.';
+    }
+    if (preg_match('/pest|disease|infest|aphid|worm|mite/', $lowerChallenges)) {
+        $advice[] = 'Adopt integrated pest management (IPM): monitoring, biological controls, and targeted spraying (drones can help).';
+    }
+    if (preg_match('/labor|efficien|cost|harvest|planting/', $lowerChallenges)) {
+        $advice[] = 'Explore automation like autonomous tractors for planting/harvesting to cut labor costs and improve efficiency.';
+    }
+    if (preg_match('/monitor|yield|health|mapping|data|variab/', $lowerChallenges)) {
+        $advice[] = 'Use drones and farm sensors for crop-health mapping and data-driven decisions to boost yield and input efficiency.';
+    }
+    if (!$advice) {
+        $advice[] = 'Start with a soil health test, then plan irrigation, pest prevention, and crop rotation based on results.';
+    }
+
+    // Pick up to 3 relevant technologies based on keywords
+    $picks = [];
+    foreach ($technologies as $tech) {
+        if (count($picks) >= 3) break;
+        $hay = strtolower($tech['name'].' '.$tech['description'].' '.$tech['category']);
+        if (
+            (strpos($hay, 'irrig') !== false && preg_match('/water|irrig|drought|moisture/', $lowerChallenges)) ||
+            (strpos($hay, 'drone') !== false && preg_match('/pest|disease|monitor|mapping/', $lowerChallenges)) ||
+            (strpos($hay, 'tractor') !== false && preg_match('/labor|efficien|cost/', $lowerChallenges)) ||
+            (strpos($hay, 'sensor') !== false && preg_match('/monitor|soil|moisture|data/', $lowerChallenges))
+        ) {
+            $picks[] = $tech;
+        }
+    }
+    // If no matches, just take first 2
+    if (!$picks) {
+        $picks = array_slice($technologies, 0, 2);
+    }
+
+    $html = '<div class="space-y-3">';
+    $html .= '<p><strong>Farm size:</strong> '.htmlspecialchars($farmSize).'</p>';
+    $html .= '<p><strong>Crops:</strong> '.htmlspecialchars($crops).'</p>';
+    $html .= '<p><strong>Challenges:</strong> '.htmlspecialchars($challenges).'</p>';
+    $html .= '<h4><strong>Actionable tips:</strong></h4><ul>';
+    foreach ($advice as $tip) {
+        $html .= '<li>• '.htmlspecialchars($tip).'</li>';
+    }
+    $html .= '</ul>';
+    $html .= '<h4 class="mt-3"><strong>Suggested technologies:</strong></h4><ul>';
+    foreach ($picks as $p) {
+        $html .= '<li>• <a class="text-lime-400" target="_blank" rel="noopener" href="'.htmlspecialchars($p['link']).'">'.htmlspecialchars($p['name']).'</a> — '.htmlspecialchars($p['description']).'</li>';
+    }
+    $html .= '</ul>';
+    $html .= '<p class="text-xs text-gray-400 mt-2">(Offline recommendation generated locally.)</p>';
+    $html .= '</div>';
+    return $html;
+}
+
 // Modal logic
 $show_modal = false;
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -103,45 +168,72 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $crops = $_POST['crops'] ?? '';
     $challenges = $_POST['challenges'] ?? '';
 
-    // --- Gemini API key ---
-    $api_key = "AIzaSyApehQ1TkiRU0_WMjlvavHUPyzKIxBoli8"; // <-- put your Gemini API key here
-    
-    // --- Prepare the user prompt ---
-    $user_prompt = "You are an agriculture expert. A farmer has a farm size of $farmSize, grows $crops, and is facing the following challenges: $challenges. 
-    Give them helpful advice about farming best practices, pest prevention, and irrigation scheduling. 
-    Keep it short and easy to understand.";
+    $recommendation_html = '';
+    $usedFallback = false;
+    $showAiDebug = getenv('SHOW_AI_DEBUG') === '1';
 
-    // --- Call Gemini API ---
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$api_key";
+    // Prefer environment variable for API key (match pest.php behavior)
+    $api_key = $_ENV['GEMINI_API_KEY'] ?? (getenv('GEMINI_API_KEY') ?: '');
 
-    $data = [
-        "contents" => [
-            [
-                "parts" => [
-                    ["text" => $user_prompt]
-                ]
-            ]
-        ]
-    ];
+    // Decide whether to attempt API call
+    $canCallApi = $api_key !== '' && extension_loaded('curl');
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    if ($canCallApi) {
+        $user_prompt = "You are an agriculture expert. A farmer has a farm size of $farmSize, grows $crops, and is facing the following challenges: $challenges. Give concise, practical advice about best practices, pest prevention, and irrigation scheduling in 5-7 bullet points.";
 
-    $response = curl_exec($ch);
-    curl_close($ch);
+        // Use same stable endpoint as pest.php
+        $url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=".$api_key;
+        $payload = [
+            'contents' => [ [ 'parts' => [ ['text' => $user_prompt] ] ] ]
+        ];
 
-    $result = json_decode($response, true);
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_TIMEOUT => 15,
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlErr = curl_error($ch);
+        curl_close($ch);
 
-    // --- Extract chatbot response ---
-    if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
-        $recommendation_html = nl2br(htmlspecialchars($result['candidates'][0]['content']['parts'][0]['text']));
+        if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
+            $result = json_decode($response, true);
+            if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                $recommendation_html = nl2br(htmlspecialchars($result['candidates'][0]['content']['parts'][0]['text']));
+            } elseif (isset($result['error']['message'])) {
+                $usedFallback = true;
+                $recommendation_html = generateLocalRecommendation($farmSize, $crops, $challenges, $technologies);
+                if ($showAiDebug) {
+                    $recommendation_html .= '<p class="text-xs text-red-300 mt-2">API error: '.htmlspecialchars($result['error']['message']).'</p>';
+                }
+            } else {
+                $usedFallback = true;
+                $recommendation_html = generateLocalRecommendation($farmSize, $crops, $challenges, $technologies);
+            }
+        } else {
+            $usedFallback = true;
+            $errMsg = $curlErr ?: ('HTTP '.$httpCode);
+            $recommendation_html = generateLocalRecommendation($farmSize, $crops, $challenges, $technologies);
+            if ($showAiDebug) {
+                $recommendation_html .= '<p class="text-xs text-red-300 mt-2">API request failed: '.htmlspecialchars($errMsg).'</p>';
+            }
+        }
     } else {
-        $recommendation_html = "Sorry, I couldn't fetch a recommendation at the moment.";
+        $usedFallback = true;
+        $recommendation_html = generateLocalRecommendation($farmSize, $crops, $challenges, $technologies);
+        if ($showAiDebug) {
+            if (!extension_loaded('curl')) {
+                $recommendation_html .= '<p class="text-xs text-yellow-300 mt-2">Note: PHP cURL extension is not enabled; using offline recommendations.</p>';
+            } elseif ($api_key === '') {
+                $recommendation_html .= '<p class="text-xs text-yellow-300 mt-2">Note: No GEMINI_API_KEY configured; using offline recommendations.</p>';
+            }
+        }
     }
+
     $show_modal = true;
 }
 ?>
@@ -165,7 +257,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="text-gray-300 flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
         <a href="./homePage.php" class="hover:text-lime-400">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-lime-400">Subsidies</a>
-        <a href="#blogs" class="hover:text-lime-400">Blog</a>
+        <a href="./blog.php" class="hover:text-lime-400">Blog</a>
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
                 <a href="./admin_subsidies.php" class="hover:text-lime-400">Admin Panel</a>
