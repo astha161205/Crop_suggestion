@@ -40,14 +40,3 @@ AgriGrow is a web-based platform designed to support and empower farmers with sm
 - **API**: OpenWeatherMap for weather forecasting  
 - **Version Control**: Git & GitHub
 
-- 
-## 📂 How to Run the Project Locally
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/kumarpankaj3404/Crop_suggestion.git
-
-# 2. Open the project folder
-cd Crop_suggestion
-
-# 3. Open index.html in your browser
