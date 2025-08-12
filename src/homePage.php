@@ -66,6 +66,21 @@ try {
   object-fit: cover;
   display: block;              /* remove bottom whitespace gap */
 }
+.home-footer .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px; /* space between sections */
+}
+
+.home-footer .footer-section {
+    min-width: 300px; /* ensures columns don't shrink too much */
+}
+
+/* Move only the first column to the right */
+.home-footer .footer-content .footer-section:first-child {
+    margin-left: 100px; /* adjust as needed */
+}
 
 .caption {
   padding: 18px;
@@ -97,26 +112,11 @@ try {
 .caption a:hover {
   text-decoration: underline;
 }
-/* Target the outer footer wrapper */
-footer, 
-.flex.flex-col.items-center.mt-10.mb-0.bg-gray-800 {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
 
-/* Target the copyright container */
-.flex.w-full.text-center.justify-center {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-    line-height: 1.2; /* reduces extra text spacing */
-}
-
-/* Target the copyright text */
-.flex.w-full.text-center.justify-center p {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
+body {
+        margin: 0; /* Removes default body space */
+        padding: 0;
+    }
 
 </style>
 </head>
@@ -398,49 +398,60 @@ footer,
         </div>
 
 </div>
-<div class="flex flex-col items-center mt-10 mb-0  bg-gray-800">
-    <div class="flex items-center m-5  gap-20 justify-between ml-30 mr-30 w-40">
+</div>
 
+<footer class="home-footer bg-gray-800 text-white py-6">
+    <div class="footer-content container mx-auto">
         
-
-        <div class="Quick_link  flex flex-col" >
-            <h1><?php echo __('quick_links'); ?></h1>
-            <div class="flex flex-col gap-2 mt-3">
-                <a href="./homePage.php" class="flex items-center gap-3"><img src="../photos/home/home-1-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('home'); ?></a>
-                <a href="./blog.php" class="flex items-center gap-3"><img src="../photos/home/blog-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('blog'); ?></a>
-                <a href="./SUNSIDIES.php" class="flex items-center gap-3"><img src="../photos/home/about.svg" alt="" class="h-4 w-4"><?php echo __('Subsidies'); ?></a>
-            </div>
+        <!-- Quick Links -->
+        <div class="footer-section">
+            <h3 class="text-lg font-bold mb-3"><?php echo __('quick_links'); ?></h3>
+            <ul class="footer-links space-y-2">
+                <li><a href="./homePage.php" class="flex items-center gap-3 hover:underline">
+                    <img src="../photos/home/home-1-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('home'); ?>
+                </a></li>
+                <li><a href="./blog.php" class="flex items-center gap-3 hover:underline">
+                    <img src="../photos/home/blog-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('blog'); ?>
+                </a></li>
+                <li><a href="./SUNSIDIES.php" class="flex items-center gap-3 hover:underline">
+                    <img src="../photos/home/about.svg" alt="" class="h-4 w-4"><?php echo __('Subsidies'); ?>
+                </a></li>
+            </ul>
         </div>
 
-        <div class="Services_link  flex flex-col" >
-            <h1 ><?php echo __('our_services'); ?></h1>
-            <div class="flex flex-col gap-2 mt-3">
-                <a href="./crop_recom.php"><?php echo __('crop_recommendation'); ?></a>
-                <a href="./weather.php"><?php echo __('weather_alerts'); ?></a>
-                <a href="./pest.php"><?php echo __('pest_management'); ?></a>
-            </div>
+        <!-- Our Services -->
+        <div class="footer-section">
+            <h3 class="text-lg font-bold mb-3"><?php echo __('our_services'); ?></h3>
+            <ul class="footer-links space-y-2">
+                <li><a href="./crop_recom.php" class="hover:underline"><?php echo __('crop_recommendation'); ?></a></li>
+                <li><a href="./weather.php" class="hover:underline"><?php echo __('weather_alerts'); ?></a></li>
+                <li><a href="./pest.php" class="hover:underline"><?php echo __('pest_management'); ?></a></li>
+            </ul>
         </div>
 
-        <div class="Social_link  flex flex-col" >
-            <h1><?php echo __('social_links'); ?></h1>
-            <div class="flex flex-col gap-2 mt-3">
-                <a href="https://facebook.com/agrigrow"  target="_blank"  class="flex gap-2 items-center"><img src="../photos/home/facebook.svg" alt="" class="h-4 w-4">Facebook</a>
-                <a href="https://instagram.com/agrigrow" target="_blank" class="flex gap-2 items-center"><img src="../photos/home/insta.svg" alt="" class="h-4 w-4">Instagram</a>
-                <a href="https://twitter.com/agrigrow"   target="_blank"  class="flex gap-2 items-center"><img src="../photos/home/twitter.svg" alt="" class="h-4 w-4">Twitter</a>
-                <!-- <a href="https://www.linkedin.com/muwahidmir"  target="_blank"  class="flex gap-2 items-center"><img src="../photos/home/linkedin.svg" alt="" class="h-4 w-4">LinkedIn</a> -->
-            </div>
+        <!-- Social Links -->
+        <div class="footer-section">
+            <h3 class="text-lg font-bold mb-3"><?php echo __('social_links'); ?></h3>
+            <ul class="footer-links space-y-2">
+                <li><a href="https://facebook.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
+                    <img src="../photos/home/facebook.svg" alt="" class="h-4 w-4">Facebook
+                </a></li>
+                <li><a href="https://instagram.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
+                    <img src="../photos/home/insta.svg" alt="" class="h-4 w-4">Instagram
+                </a></li>
+                <li><a href="https://twitter.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
+                    <img src="../photos/home/twitter.svg" alt="" class="h-4 w-4">Twitter
+                </a></li>
+            </ul>
         </div>
-        
+
     </div>
-    <div class="flex  w-full text-center justify-center">
-            <p class="p-2">© 2025 AgriGrow. <?php echo __('all_rights_reserved'); ?></p>
-        </div>
-    </div>
-    
 
-    
-        
-    
+    <!-- Footer Bottom -->
+    <div class="footer-bottom text-center p-2 border-t border-gray-600 pt-4">
+        <p class="m-0">&copy; 2025 AgriGrow. All rights reserved.</p>
+    </div>
+</footer>
 
 
 

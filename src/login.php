@@ -162,20 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             <div class="form-container sign-in absolute top-0 h-full w-1/2 left-0 z-20">
                 <form class="bg-white flex items-center justify-center flex-col px-10 h-full" method="POST" action="">
                     <h1 class="text-2xl font-bold mb-4"><?php echo __('login'); ?></h1>
-                    <div class="social-icons my-5">
-                        <a href="#" class="icon border border-gray-300 rounded-full inline-flex justify-center items-center mx-1 w-10 h-10">
-                            <i class="fa-brands fa-google"></i>
-                        </a>
-                        <a href="#" class="icon border border-gray-300 rounded-full inline-flex justify-center items-center mx-1 w-10 h-10">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="icon border border-gray-300 rounded-full inline-flex justify-center items-center mx-1 w-10 h-10">
-                            <i class="fa-brands fa-github"></i>
-                        </a>
-                        <a href="#" class="icon border border-gray-300 rounded-full inline-flex justify-center items-center mx-1 w-10 h-10">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
-                    </div>
+                    
                     <span class="text-xs mb-5"><?php echo __('or_use_email_and_password'); ?></span>
                     
                     <!-- User Type Selection -->
@@ -209,8 +196,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                         </button>
                     </div>
                     <div class="toggle-panel toggle-right absolute w-1/2 h-full flex items-center justify-center flex-col px-8 text-center top-0 right-0 transform translate-x-0">
-                        <h1 class="text-2xl font-bold mb-2"><?php echo __('hello_friend'); ?>!</h1>
-                        <p class="text-sm leading-5 tracking-wider my-5"><?php echo __('register_personal_details'); ?></p>
+                        <h1 class="text-2xl font-bold mb-2"><?php echo __('Welcome to AgriGrow'); ?>!</h1>
+                        <p class="text-sm leading-5 tracking-wider my-5"><?php echo __('Create your free account to access all features.'); ?></p>
                         <button class="bg-transparent border border-white text-white text-xs py-2.5 px-11 rounded-lg font-semibold tracking-wider uppercase cursor-pointer" id="register">
                             <?php echo __('register'); ?>
                         </button>
