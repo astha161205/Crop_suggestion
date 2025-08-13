@@ -66,21 +66,21 @@ try {
   object-fit: cover;
   display: block;              /* remove bottom whitespace gap */
 }
-.home-footer .footer-content {
+/* .home-footer .footer-content {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px; /* space between sections */
+    gap: 2px; 
 }
 
 .home-footer .footer-section {
-    min-width: 300px; /* ensures columns don't shrink too much */
+    min-width: 300px; 
 }
 
-/* Move only the first column to the right */
+
 .home-footer .footer-content .footer-section:first-child {
-    margin-left: 100px; /* adjust as needed */
-}
+    margin-left: 128px; 
+} */
 
 .caption {
   padding: 18px;
@@ -400,13 +400,15 @@ body {
 </div>
 </div>
 
-<footer class="home-footer bg-gray-800 text-white py-6">
+<footer class="home-footer bg-gray-900 text-white py-6" >
     <div class="footer-content container mx-auto">
-        
+        <!-- <div class="footer-section"  style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px;">
+                </div> -->
         <!-- Quick Links -->
-        <div class="footer-section">
-            <h3 class="text-lg font-bold mb-3"><?php echo __('quick_links'); ?></h3>
+        <div class="footer-section"  style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px; margin-right: 130px;">
+            
             <ul class="footer-links space-y-2">
+                <h3 class="text-lg font-bold mb-3"><?php echo __('quick_links'); ?></h3>
                 <li><a href="./homePage.php" class="flex items-center gap-3 hover:underline">
                     <img src="../photos/home/home-1-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('home'); ?>
                 </a></li>
@@ -420,9 +422,10 @@ body {
         </div>
 
         <!-- Our Services -->
-        <div class="footer-section">
-            <h3 class="text-lg font-bold mb-3"><?php echo __('our_services'); ?></h3>
+        <div class="footer-section"  style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px; margin-right: 130px;">
+            
             <ul class="footer-links space-y-2">
+                <h3 class="text-lg font-bold mb-3"><?php echo __('our_services'); ?></h3>
                 <li><a href="./crop_recom.php" class="hover:underline"><?php echo __('crop_recommendation'); ?></a></li>
                 <li><a href="./weather.php" class="hover:underline"><?php echo __('weather_alerts'); ?></a></li>
                 <li><a href="./pest.php" class="hover:underline"><?php echo __('pest_management'); ?></a></li>
@@ -430,9 +433,10 @@ body {
         </div>
 
         <!-- Social Links -->
-        <div class="footer-section">
-            <h3 class="text-lg font-bold mb-3"><?php echo __('social_links'); ?></h3>
+        <div class="footer-section"  style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px;">
+            
             <ul class="footer-links space-y-2">
+                <h3 class="text-lg font-bold mb-3"><?php echo __('social_links'); ?></h3>
                 <li><a href="https://facebook.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
                     <img src="../photos/home/facebook.svg" alt="" class="h-4 w-4">Facebook
                 </a></li>
@@ -444,7 +448,8 @@ body {
                 </a></li>
             </ul>
         </div>
-
+                    <!-- <div class="footer-section">
+                </div> -->
     </div>
 
     <!-- Footer Bottom -->
