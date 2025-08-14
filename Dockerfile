@@ -1,26 +1,31 @@
 # PHP + Apache
 FROM php:8.2-apache
 
-# Enable Apache mod_rewrite
-RUN a2enmod rewrite
+# Enable Apache modules
+RUN a2enmod rewrite headers
 
-# Install PHP extensions for MySQL and email sending
+# PHP extensions
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Install Composer
+# Composer (safe if you don't use it)
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copy source code to Apache directory
-COPY src/ /var/www/html/
+# Start script that binds Apache to $PORT (Render/Railway)
+COPY docker/apache-run.sh /usr/local/bin/apache-run.sh
+RUN chmod +x /usr/local/bin/apache-run.sh
 
-# Set working directory
-WORKDIR /var/www/html/
+WORKDIR /var/www/html
 
-# Ensure .env is copied (optional if you mount it)
-COPY .env /var/www/html/.env
+# Install PHP deps if composer.json exists (won't fail if it doesn't)
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --prefer-dist --optimize-autoloader || true
+
+# Copy your app (your PHP lives in src/)
+COPY src/ ./
 
 # Permissions
 RUN chown -R www-data:www-data /var/www/html
 
-# Expose Apache port
-EXPOSE 80
+# Default expose (local); platform will pass $PORT anyway
+EXPOSE 8080
+CMD ["apache-run.sh"]

@@ -1,46 +1,32 @@
-
-
+version: '3.9'
 services:
   app:
-    image: php:8.2-apache
-    container_name: php_app
+    build: .
+    container_name: crop_app
     ports:
-      - "8080:80"
-    volumes:
-      - ./src:/var/www/html
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=root
+      - DB_NAME=crop
     depends_on:
       - db
-    environment:
-      MYSQL_HOST: db
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./src:/var/www/html
 
   db:
     image: mysql:8.0
-    container_name: mysql_db
+    container_name: crop_db
     restart: always
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: ${MYSQL_ALLOW_EMPTY_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crop
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    environment:
-      PMA_HOST: db
-      PMA_USER: ${MYSQL_USER}
-      PMA_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "8081:80"
-    depends_on:
-      - db
 
 volumes:
   db_data:
