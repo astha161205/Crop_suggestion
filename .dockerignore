@@ -1,6 +1,6 @@
 .git
 .env
 node_modules
-vendor
+vendor/* 
 docker
 *.log
