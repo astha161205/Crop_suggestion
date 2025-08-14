@@ -14,7 +14,7 @@ $username = $_ENV['MYSQL_USER'];
 $password = $_ENV['MYSQL_PASSWORD'];
 
 // Connect to MySQL
-$conn = new mysqli($host, $username, $password, $dbname);
+$conn = new mysqli($host, $username, $password, $dbname, $port);
 
 // Check connection
 if ($conn->connect_error) {
