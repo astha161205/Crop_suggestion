@@ -1,6 +1,10 @@
 <?php
 session_start();
-
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 // Clear all session variables
 $_SESSION = array();
 

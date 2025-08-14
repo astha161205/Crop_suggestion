@@ -247,10 +247,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <title>AgriGrow - Farm Technologies</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 min-h-screen flex flex-col">
+<body class="font-mono bg-gray-900 min-h-screen flex flex-col text-white">
 
   <!-- Header -->
-  <?php include 'header.php'; ?>
+  <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3 p-2">
+    <div class="flex gap-2 items-center">
+        <a href="index.php" class="flex items-center gap-2 ">
+            <img src="./home/logo.png" alt="logo" class="h-10 w-10 rounded-3xl">
+            <h3>AgriGrow</h3>
+        </a>
+    </div>
+    <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
+        <a href="index.php" class="hover:text-white">Home</a>
+        <a href="SUNSIDIES.php" class="hover:text-white">Subsidies</a>
+        <a href="blog.php" class="hover:text-white">Blog</a>
+        
+        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
+            <a href="<?php echo $profilePage; ?>" class="hover:text-white">Profile</a>
+        <?php else: ?>
+            <a href="<?php echo $loginPage; ?>" class="hover:text-white">Login</a>
+        <?php endif; ?>
+    </div>
+</header>
+
 
   <main class="flex-1">
     <!-- Hero Section -->

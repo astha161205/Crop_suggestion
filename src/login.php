@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['logged_in'] = true;
                 $_SESSION['user_type'] = 'user';
-                header("Location: homePage.php");
+                header("Location: index.php");
                 exit();
             } else {
                 $message = "Invalid email or password.";
