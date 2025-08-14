@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
                 $_SESSION['user_email'] = $email;
                 $_SESSION['logged_in'] = true;
                 $showSuccess = true;
-                header("Location: homePage.php");
+                header("Location: index.php");
                 exit();
             } else {
                 $message = "Error: " . $conn->error;

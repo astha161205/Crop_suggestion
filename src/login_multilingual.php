@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
                     $_SESSION['logged_in'] = true;
                     $_SESSION['user_type'] = 'farmer';
                     $showSuccess = true;
-                    header("Location: homePage.php");
+                    header("Location: index.php");
                     exit();
                 } else {
                     $message = __("registration_failed");
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                     if ($user['user_type'] === 'admin') {
                         header("Location: admin_subsidies.php");
                     } else {
-                        header("Location: homePage.php");
+                        header("Location: index.php");
                     }
                     exit();
                 } else {
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 
         <!-- Back to Home -->
         <div class="mt-6 text-center">
-            <a href="homePage.php" class="text-lime-600 hover:text-lime-800 text-sm">
+            <a href="index.php" class="text-lime-600 hover:text-lime-800 text-sm">
                 ← <?php echo __('home'); ?>
             </a>
         </div>

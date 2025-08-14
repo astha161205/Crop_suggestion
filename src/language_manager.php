@@ -330,7 +330,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_language'])) {
     }
     
     // Redirect back to the page that made the request
-    $redirect_url = $_POST['redirect_url'] ?? 'homePage.php';
+    $redirect_url = $_POST['redirect_url'] ?? 'index.php';
     header("Location: $redirect_url");
     exit();
 }
