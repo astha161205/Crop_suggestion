@@ -141,28 +141,7 @@ $theme = getThemeClasses();
     </style>
 </head>
 <body class="font-mono <?php echo $theme['bg']; ?> <?php echo $theme['text']; ?> min-h-screen">
-<header class="flex justify-between items-center <?php echo $theme['bg_header']; ?> h-15 sticky z-20 border-b-2 <?php echo $theme['border_header']; ?> top-0 pl-3 pr-3">
-    <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-            <h3 class="font-bold text-lg">AgriGrow</h3>
-        </a>
-    </div>
-    <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="<?php echo $theme['hover']; ?>">Home</a>
-        <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>">Subsidies</a>
-        <a href="#blogs" class="<?php echo $theme['hover']; ?>">Blog</a>
-        
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-            <a href="./profile.php" class="<?php echo $theme['hover']; ?>">Profile</a>
-        <?php else: ?>
-            <a href="./login.php" class="<?php echo $theme['hover']; ?>">Login</a>
-        <?php endif; ?>
-    </div>
-</header>
-
-
-
+            <?php include 'header.php'; ?>
 
 
             <main class="flex flex-col min-h-[300px]">

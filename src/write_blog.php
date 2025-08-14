@@ -115,20 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="font-mono bg-gray-950 text-white relative">
 
-<header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
-    <div class="flex gap-2 items-center">
-      <a href="./homePage.php" class="flex items-center gap-2">
-        <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-        <h3>AgriGrow</h3>
-      </a>
-    </div>
-    <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
-      <a href="./homePage.php" class="hover:text-white">Home</a>
-      <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-      <a href="./blog.php" class="hover:text-white">Blog</a>
-      <a href="./profile.php" class="hover:text-white">Profile</a>
-    </div>
-</header>
+<?php include 'header.php'; ?>
 
 <main class="container mx-auto px-4 py-12 max-w-4xl">
     <div class="bg-gray-900 rounded-2xl p-8">

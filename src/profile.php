@@ -264,14 +264,14 @@ function getProfileImage($profileData) {
 
 <header class="flex justify-between items-center <?php echo $theme['bg_header']; ?> h-15 sticky z-20 border-b-2 <?php echo $theme['border_header']; ?> top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
+        <a href="./index.php" class="flex items-center gap-2">
             <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
             <h3 class="">AgriGrow</h3>
         </a>
     </div>
 
     <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="<?php echo $theme['hover']; ?>"><?php echo __('home'); ?></a>
+        <a href="./index.php" class="<?php echo $theme['hover']; ?>"><?php echo __('home'); ?></a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>"><?php echo __('subsidies'); ?></a>
         <a href="./blog.php" class="<?php echo $theme['hover']; ?>"><?php echo __('blog'); ?></a>
         
@@ -505,7 +505,7 @@ function getProfileImage($profileData) {
                             <?php echo __('logout'); ?>
                         </a>
                         
-                        <a href="./homePage.php" 
+                        <a href="./index.php" 
                            class="<?php echo $theme['button_secondary']; ?> px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2">
                             <i class="fas fa-home"></i>
                             <?php echo __('back_to_home'); ?>

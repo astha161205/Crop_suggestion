@@ -182,26 +182,7 @@ $dotenv->load();
 </head>
 <body class="font-mono bg-gray-950 text-white relative text-center items-center no-scroll">
     
-<header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
-    <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-            <h3 class="">AgriGrow</h3>
-        </a>
-    </div>
-
-    <div class="text-gray-400 flex gap-6 pl-5 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="hover:text-white">Home</a>
-        <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
-        <a href="#blogs" class="hover:text-white">Blog</a>
-        
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-            <a href="./profile.php" class="hover:text-white">Profile</a>
-        <?php else: ?>
-            <a href="./login.php" class="hover:text-white">Login</a>
-        <?php endif; ?>
-    </div>
-</header>
+<?php include 'header.php'; ?>
    
     <div class="bg-weather min-h-screen flex flex-col items-center">
         <div class="content-container container mx-auto px-4 flex flex-col items-center justify-end w-full text-center" style="padding-bottom: 0;">

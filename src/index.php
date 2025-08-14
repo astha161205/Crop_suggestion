@@ -131,33 +131,7 @@ body {
 
 
 
-<header class="flex justify-between items-center <?php echo $theme['bg_header']; ?> h-15 sticky z-20 border-b-2 <?php echo $theme['border_header']; ?> top-0   pl-3 pr-3">
-    <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-            <h3 class="">AgriGrow</h3>
-        </a>
-    </div>
-
-    <div class="<?php echo $theme['text_secondary']; ?> flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="<?php echo $theme['hover']; ?>"><?php echo __('home'); ?></a>
-        <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>"><?php echo __('subsidies'); ?></a>
-        <a href="./blog.php" class="<?php echo $theme['hover']; ?>"><?php echo __('blog'); ?></a>
-
-        
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-                <a href="./admin_subsidies.php" class="<?php echo $theme['hover']; ?>"><?php echo __('admin_panel'); ?></a>
-                <a href="./logout.php" class="<?php echo $theme['hover']; ?> text-red-400"><?php echo __('logout'); ?></a>
-            <?php else: ?>
-                <a href="./profile.php" class="<?php echo $theme['hover']; ?>"><?php echo __('profile'); ?></a>
-            <?php endif; ?>
-        <?php else: ?>
-            <a href="./login.php" class="<?php echo $theme['hover']; ?>"><?php echo __('login'); ?></a>
-        <?php endif; ?>
-    </div>
-</header>
-
+<?php include 'header.php'; ?>
 
 
 
@@ -416,7 +390,7 @@ body {
             
             <ul class="footer-links space-y-2">
                 <h3 class="text-lg font-bold mb-3"><?php echo __('quick_links'); ?></h3>
-                <li><a href="./homePage.php" class="flex items-center gap-3 hover:underline">
+                <li><a href="./index.php" class="flex items-center gap-3 hover:underline">
                     <?php echo __('home'); ?>
                 </a></li>
                 <li><a href="./blog.php" class="flex items-center gap-3 hover:underline">

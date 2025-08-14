@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
         ";
 
         $mail->send();
-        echo "<script>alert('Mail Sent Successfully'); window.location.href = 'homePage.php';</script>";
+        echo "<script>alert('Mail Sent Successfully'); window.location.href = 'index.php';</script>";
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }

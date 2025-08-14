@@ -247,29 +247,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body class="bg-gray-900 min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="flex justify-between items-center bg-gray-900 h-15 sticky z-20  top-0 pl-3 pr-3">
-    <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
-            <h3 class="font-bold text-white text-xl">AgriGrow</h3>
-        </a>
-    </div>
-    <div class="text-gray-300 flex gap-6 pl-0 pr-4 pt-1 pb-1 ml-auto">
-        <a href="./homePage.php" class="hover:text-lime-400">Home</a>
-        <a href="./SUNSIDIES.php" class="hover:text-lime-400">Subsidies</a>
-        <a href="./blog.php" class="hover:text-lime-400">Blog</a>
-        <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
-            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-                <a href="./admin_subsidies.php" class="hover:text-lime-400">Admin Panel</a>
-                <a href="./logout.php" class="hover:text-red-400 text-red-400">Logout</a>
-            <?php else: ?>
-                <a href="./profile.php" class="hover:text-lime-400">Profile</a>
-            <?php endif; ?>
-        <?php else: ?>
-            <a href="./login.php" class="hover:text-lime-400">Login</a>
-        <?php endif; ?>
-    </div>
-  </header>
+  <?php include 'header.php'; ?>
 
   <main class="flex-1">
     <!-- Hero Section -->

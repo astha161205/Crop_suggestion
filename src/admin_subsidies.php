@@ -96,14 +96,14 @@ $applications_result = $conn->query($applications_query);
 <!-- Header -->
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
-        <a href="./homePage.php" class="flex items-center gap-2">
+        <a href="./index.php" class="flex items-center gap-2">
             <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
             <h3 class="">AgriGrow Admin</h3>
         </a>
     </div>
 
     <div class="text-gray-400 flex items-center gap-5 border-2 border-gray-800 rounded-2xl pl-4 pr-4 pt-1 pb-1">
-        <a href="./homePage.php" class="hover:text-white">Home</a>
+        <a href="./index.php" class="hover:text-white">Home</a>
         <a href="./SUNSIDIES.php" class="hover:text-white">Subsidies</a>
         <a href="./admin_subsidies.php" class="hover:text-white">Admin</a>
         <a href="./logout.php" class="hover:text-white text-red-400">Logout</a>
