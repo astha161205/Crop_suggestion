@@ -1,11 +1,14 @@
 <?php
 session_start(); // Start the session
-
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 // Database connection
-$host = 'localhost';
-$dbname = 'crop';
-$username = 'root';
-$password = '';
+$host =  $_ENV['MYSQL_HOST'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username =  $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
+
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
