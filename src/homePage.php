@@ -18,7 +18,7 @@ $username = $_ENV['MYSQL_USER'];
 $password = $_ENV['MYSQL_PASSWORD'];
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password, $port);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
     // Fetch latest 3 published blogs
