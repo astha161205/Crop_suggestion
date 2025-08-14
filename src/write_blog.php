@@ -1,19 +1,24 @@
 <?php
 session_start();
-require __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 // Check if user is logged in
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header('Location: login.php');
     exit();
 }
 // Database connection using env vars
-$host = $_ENV['MYSQL_HOST'];
-$port = $_ENV['MYSQL_PORT'];
-$dbname = $_ENV['MYSQL_DATABASE'];
-$username = $_ENV['MYSQL_USER'];
-$password = $_ENV['MYSQL_PASSWORD'];
+$host = getenv('MYSQL_HOST') ?: 'localhost';
+$port = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE') ?: 'crop';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: '';
 
 try {
     $pdo = new PDO(

@@ -2,23 +2,24 @@
 session_start(); // Start the session
 
 require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 
 // Database connection
-$host = $_ENV['MYSQL_HOST'];
-$dbname = $_ENV['MYSQL_DATABASE'];
-$username = $_ENV['MYSQL_USER'];
-$password = $_ENV['MYSQL_PASSWORD'];
-
+$host = getenv('MYSQL_HOST') ?: 'localhost';
+$port = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE') ?: 'crop';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: '';
 
 try {
-    $pdo = new PDO(
-    "mysql:host=$host;port=" . $_ENV['MYSQL_PORT'] . ";dbname=$dbname",
-    $username,
-    $password
-);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }

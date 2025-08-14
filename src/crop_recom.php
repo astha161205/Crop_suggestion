@@ -3,19 +3,24 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Load environment variables from .env
 require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 
 // Establish database connection
-$conn = mysqli_connect(
-    $_ENV['MYSQL_HOST'],
-    $_ENV['MYSQL_USER'],
-    $_ENV['MYSQL_PASSWORD'],
-    $_ENV['MYSQL_DATABASE'],
-    $_ENV['MYSQL_PORT']
-);
+$host = getenv('MYSQL_HOST') ?: 'localhost';
+$port = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE') ?: 'crop';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: '';
+
+$conn = mysqli_connect($host, $username, $password, $dbname, $port);
+
 // Check connection
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
@@ -31,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $input = [];
 
     foreach ($expected_keys as $key) {
-        // If key is missing or empty, set to 0 or handle appropriately
         $input[$key] = isset($_POST[$key]) ? (float)$_POST[$key] : 0;
     }
 
@@ -60,7 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $recommended_crop = $closest_crop;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

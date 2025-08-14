@@ -3,10 +3,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Load environment variables from .env
 require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
+
 
 // Database connection with error handling
 $conn = null;

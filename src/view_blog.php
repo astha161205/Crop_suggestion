@@ -1,25 +1,29 @@
 <?php
 session_start();
-require __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
-// Database connection using env vars
-$host = $_ENV['MYSQL_HOST'];
-$port = $_ENV['MYSQL_PORT'];
-$dbname = $_ENV['MYSQL_DATABASE'];
-$username = $_ENV['MYSQL_USER'];
-$password = $_ENV['MYSQL_PASSWORD'];
-try {
-    $pdo = new PDO(
-    "mysql:host=$host;port=" . $_ENV['MYSQL_PORT'] . ";dbname=$dbname",
-    $username,
-    $password
-);
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
 }
 
+$host = getenv('MYSQL_HOST') ?: 'localhost';
+$port = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE') ?: 'crop';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: '';
+try {
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8",
+        $username,
+        $password
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 // Get blog ID from URL
 $blog_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 

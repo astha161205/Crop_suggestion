@@ -1,10 +1,13 @@
 <?php
 session_start();
 // Load .env (optional) so GEMINI_API_KEY can be stored in a .env file at project root
-@require_once __DIR__ . '/../vendor/autoload.php';
-if (class_exists('Dotenv\\Dotenv')) {
-  $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-  $dotenv->safeLoad();
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
 }
 // Dummy testimonials and technologies arrays
 $testimonials = [

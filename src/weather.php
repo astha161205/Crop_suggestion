@@ -1,8 +1,13 @@
 <?php
 session_start(); // Start the session
-require_once __DIR__ . '/../vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+
+// Only load .env if it exists (prevents fatal error in production)
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

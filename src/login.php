@@ -7,21 +7,23 @@
 <?php
 session_start(); // Must be the FIRST line
 
-// Load environment variables from .env
-require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+$dotenvPath = __DIR__ . '/../.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+    $dotenv->load();
+}
 
 require_once 'language_manager.php';
 
 // Database connection
-$conn = new mysqli(
-    $_ENV['MYSQL_HOST'],
-    $_ENV['MYSQL_USER'],
-    $_ENV['MYSQL_PASSWORD'],
-    $_ENV['MYSQL_DATABASE'],
-    $_ENV['MYSQL_PORT']
-);
+$host = getenv('MYSQL_HOST') ?: 'localhost';
+$port = getenv('MYSQL_PORT') ?: '3306';
+$dbname = getenv('MYSQL_DATABASE') ?: 'crop';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: '';
+
+$conn = new mysqli($host, $username, $password, $dbname, $port);
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
