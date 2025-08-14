@@ -224,7 +224,7 @@ function getProfileImage($profileData) {
     if (isset($profileData['profile_image']) && $profileData['profile_image']) {
         return 'data:image/jpeg;base64,' . base64_encode($profileData['profile_image']);
     }
-    return '../photos/home/default-profile.png';
+    return './home/default-profile.png';
 }
 ?>
 
@@ -285,7 +285,7 @@ function getProfileImage($profileData) {
                 <div class="<?php echo $theme['bg_card']; ?> rounded-xl shadow-xl overflow-hidden mb-8">
                     <div class="relative">
                         <!-- Cover Photo -->
-                        <div class="h-40 bg-[url('../photos/home/back1.jpg')] bg-cover "></div>
+                        <div class="h-40 bg-[url('./home/back1.jpg')] bg-cover "></div>
                         
                         <!-- Profile Picture and Basic Info -->
                         <div class="flex flex-col md:flex-row items-start px-6 pb-6 -mt-16">

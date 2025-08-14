@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         }
     </style>
 </head>
-<body class="font-['Montserrat'] bg-[url(../photos/home/farm.jpg)] bg-cover bg-no-repeat bg-center backdrop-blur-sm">
+<body class="font-['Montserrat'] bg-[url(./home/farm.jpg)] bg-cover bg-no-repeat bg-center backdrop-blur-sm">
     <div class="flex items-center justify-center flex-col h-screen w-full">
         <div class="container bg-white rounded-[30px] shadow-lg relative overflow-hidden w-full max-w-4xl min-h-[480px]" id="container">
             <div class="form-container sign-up absolute top-0 h-full w-1/2 left-0 opacity-0 z-0">

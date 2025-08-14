@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     height: 100vh;
   }
     .bg-crop_recommendation {
-        background-image: url('../photos/home/seeds.jpg');
+        background-image: url('./home/seeds.jpg');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;

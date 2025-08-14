@@ -12,7 +12,7 @@ $loginPage = "login.php";
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
         <a href="<?php echo $homePage; ?>" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
+            <img src="./home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
             <h3>AgriGrow</h3>
         </a>
     </div>

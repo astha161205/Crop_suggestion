@@ -16,7 +16,7 @@ if (file_exists($dotenvPath)) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Support - AgriGrow</title>
-  <link rel="icon" href="../photos/home/favicon2.svg" type="image/svg+xml">
+  <link rel="icon" href="./home/favicon2.svg" type="image/svg+xml">
   <link href="./output.css" rel="stylesheet" />
   <link rel="stylesheet" href="./homecss.css" />
   <style>

@@ -39,7 +39,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agri-Grow</title>
-    <link rel="icon" href="../photos/home/favicon2.svg" type="image/svg+xml">
+    <link rel="icon" href="./home/favicon2.svg" type="image/svg+xml">
     <link href="./output.css" rel="stylesheet">
     <link rel="stylesheet" href="./homecss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -148,7 +148,7 @@ body {
         class="absolute z-0 w-full h-full object-cover"
     >
 
-        <source src="../photos/home/8333971-uhd_4096_2160_25fps.mp4" type="video/mp4">
+        <source src="./home/8333971-uhd_4096_2160_25fps.mp4" type="video/mp4">
     </video>
 
         <div class=" relative z-10 flex flex-col items-center justify-center w-200 text-white">
@@ -189,7 +189,7 @@ body {
     <!-- Crop Recommendation Card -->
     <a href="./crop_recom.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/crop_rec.png" alt="crop" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+        <img src="./home/crop_rec.png" alt="crop" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('crop_recommendation'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -202,7 +202,7 @@ body {
     <!-- Weather Predictions Card -->
     <a href="./weather.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/3ZRAI3Y3EBFF7NGTSBCIS7EGRI.avif" alt="weather" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+        <img src="./home/3ZRAI3Y3EBFF7NGTSBCIS7EGRI.avif" alt="weather" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('weather_forecast'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -215,7 +215,7 @@ body {
     <!-- Pest and Disease Card -->
     <a href="./pest.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/pest.webp" alt="pest" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+        <img src="./home/pest.webp" alt="pest" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __('Pest Management Chatbot'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -228,7 +228,7 @@ body {
     <!-- Government Schemes Card -->
     <a href="./SUNSIDIES.php" class="block">
       <div class="rounded-xl border-2 <?php echo $theme['border']; ?> <?php echo $theme['bg_card']; ?> min-h-[280px] flex flex-col hover:scale-105 transition-transform duration-300 ease-in-out">
-        <img src="../photos/home/subsidies.png" alt="subsidies" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
+        <img src="./home/subsidies.png" alt="subsidies" style="height: 280px; width: 100%; object-fit: cover; border-radius: 0.75rem 0.75rem 0 0;">
         <div class="p-4 flex flex-col flex-grow">
           <h3 class="text-lg font-bold mb-2 <?php echo $theme['text']; ?>"><?php echo __(' Government Subsidies'); ?></h3>
           <p class="text-sm <?php echo $theme['text_secondary']; ?>">
@@ -262,18 +262,18 @@ body {
         
         <!-- Farm Tech -->
         <a href="./farmtech.php" class="<?php echo $theme['bg_card']; ?>  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
-            <img src="../photos/home/farm_tech.svg" alt="tech" class="h-32 w-32 mb-4">
+            <img src="./home/farm_tech.svg" alt="tech" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">farm_tech</p>
         </a>
 
         <!-- Support -->
         <a href="./support.php" class="<?php echo $theme['bg_card']; ?>  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
-            <img src="../photos/home/support.svg" alt="support" class="h-32 w-32 mb-4">
+            <img src="./home/support.svg" alt="support" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">Support</p>
         </a>
         <!-- Feedback -->
         <a href="./feedback.php" class="<?php echo $theme['bg_card']; ?> p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
-            <img src="../photos/home/feed.webp" alt="feedback" class="h-32 w-32 mb-4">
+            <img src="./home/feed.webp" alt="feedback" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">Feedback</p>
         </a>
 
@@ -347,7 +347,7 @@ body {
             <?php if (empty($latest_blogs)): ?>
                 <!-- Show default blogs if no blogs in database -->
                 <div class="box">
-                    <img src="../photos/home/box1.jpg" alt="Image 1">
+                    <img src="./home/box1.jpg" alt="Image 1">
                     <div class="caption <?php echo $theme['bg_card']; ?> text-white" style="color: #fff">
                         <h3 style="color: white">Investing In The Green Revolution: Growagros And Sustainable Agriculture</h3>
                         <a href="https://www.growagros.com/blog/investing-in-the-green-revolution-growagros-and-sustainable-agriculture/">Read More »</a>
@@ -355,7 +355,7 @@ body {
                 </div>
 
                 <div class="box">
-                    <img src="../photos/home/box2.webp" alt="Image 2">
+                    <img src="./home/box2.webp" alt="Image 2">
                     <div class="caption bg-gray-800" style="color: #fff">
                         <h3 style="color: white">Everything You Need To Know About Agricultural Land Lease In India</h3>
                         <a href="https://www.growagros.com/blog/everything-you-need-to-know-about-agricultural-land-lease-in-india/">Read More »</a>
@@ -363,7 +363,7 @@ body {
                 </div>
 
                 <div class="box">
-                    <img src="../photos/home/box3.jpg" alt="Image 3">
+                    <img src="./home/box3.jpg" alt="Image 3">
                     <div class="caption bg-gray-800" style="color: #fff">
                         <h3 style="color: white">Agricultural Technologies and Innovative Advanced Ways of Farming</h3>
                         <a href="https://www.growagros.com/blog/agricultural-technologies-advanced-ways-of-farming/">Read More »</a>

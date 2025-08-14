@@ -73,7 +73,7 @@ $applications_result = $conn->query($applications_query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Subsidies Management</title>
-    <link rel="icon" href="../photos/home/favicon2.svg" type="image/svg+xml">
+    <link rel="icon" href="./home/favicon2.svg" type="image/svg+xml">
     <link href="./output.css" rel="stylesheet">
     <link rel="stylesheet" href="./homecss.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -97,7 +97,7 @@ $applications_result = $conn->query($applications_query);
 <header class="flex justify-between items-center bg-gray-950 h-15 sticky z-20 border-b-2 border-b-gray-900 top-0 pl-3 pr-3">
     <div class="flex gap-2 items-center">
         <a href="./index.php" class="flex items-center gap-2">
-            <img src="../photos/home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
+            <img src="./home/logo.png" alt="logo" class="h-10 w-10 rounded-4xl">
             <h3 class="">AgriGrow Admin</h3>
         </a>
     </div>

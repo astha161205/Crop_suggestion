@@ -162,7 +162,7 @@ $theme = getThemeClasses();
                     <div class="space-y-4 pb-4">
                         <!-- Card 1 -->
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/aphids.jpeg" alt="Aphids" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/aphids.jpeg" alt="Aphids" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Aphids</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> Curled leaves, sticky residue (honeydew)</div>
@@ -172,7 +172,7 @@ $theme = getThemeClasses();
                         </div>
                         <!-- Card 2 -->
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/Cutworms.jpeg" alt="Cutworms" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/Cutworms.jpeg" alt="Cutworms" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Cutworms</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> Damaged stems, missing seedlings</div>
@@ -182,7 +182,7 @@ $theme = getThemeClasses();
                         </div>
                         <!-- Card 3 -->
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/powdery-mildew.jpg" alt="Powdery Mildew" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/powdery-mildew.jpg" alt="Powdery Mildew" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Powdery Mildew</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> White powder on leaves</div>
@@ -192,7 +192,7 @@ $theme = getThemeClasses();
                         </div>
                         <!-- Card 4 -->
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/armyworm.jpeg" alt="Armyworm" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/armyworm.jpeg" alt="Armyworm" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Armyworm</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> Ragged leaves, chewed stems</div>
@@ -202,7 +202,7 @@ $theme = getThemeClasses();
                         </div>
                         <!-- Additional Cards for more content -->
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/Mites.webp" alt="Spider Mites" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/Mites.webp" alt="Spider Mites" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Spider Mites</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> Fine webbing, yellow speckled leaves</div>
@@ -211,7 +211,7 @@ $theme = getThemeClasses();
                             </div>
                         </div>
                         <div class="<?php echo $theme['bg']; ?> rounded-xl shadow-lg p-4 flex flex-col md:flex-row gap-3 items-center border <?php echo $theme['border']; ?>">
-                            <img src="../photos/home/Whiteflies1.jpg" alt="Whiteflies" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
+                            <img src="./home/Whiteflies1.jpg" alt="Whiteflies" class="w-20 h-20 object-cover rounded-lg border <?php echo $theme['border']; ?>">
                             <div>
                                 <h2 class="text-lg font-semibold mb-1 text-blue-400">Whiteflies</h2>
                                 <div class="text-xs <?php echo $theme['text_secondary']; ?> mb-1"><b>Symptoms:</b> White insects flying when disturbed, yellow leaves</div>
