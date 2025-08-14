@@ -1,14 +1,14 @@
 <?php
 session_start(); // Must be the FIRST line
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
 
+// Only load .env if it exists (prevents fatal error in production)
 $dotenvPath = __DIR__ . '/../.env';
 if (file_exists($dotenvPath)) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->load();
 }
-
 require_once 'language_manager.php';
-
 // Database connection
 $host = getenv('MYSQL_HOST') ?: 'localhost';
 $port = getenv('MYSQL_PORT') ?: '3306';
