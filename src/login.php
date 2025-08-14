@@ -1,9 +1,3 @@
-<!-- CREATE TABLE signin (
-    name VARCHAR(100),
-    email VARCHAR(100) PRIMARY KEY,
-    password VARCHAR(255)
-); -->
-
 <?php
 session_start(); // Must be the FIRST line
 

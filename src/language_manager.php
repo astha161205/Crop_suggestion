@@ -1,7 +1,4 @@
 <?php
-// Language Manager for Multi-language Support
-// Supports Hindi and English
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
