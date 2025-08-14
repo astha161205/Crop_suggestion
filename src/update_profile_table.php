@@ -1,11 +1,20 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 // Script to update farmer_profiles table for profile image paths
 // Run this script in your browser to update the table structure
 
 echo "<h2>Updating farmer_profiles Table</h2>";
 
 // Database connection
-$conn = new mysqli("localhost", "root", "", "crop");
+$conn = new mysqli(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

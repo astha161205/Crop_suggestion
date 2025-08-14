@@ -2,10 +2,20 @@
 // Script to recreate the user_applications table
 // Run this script in your browser to recreate the dropped table
 
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 echo "<h2>Recreating user_applications Table</h2>";
 
-// Database connection
-$conn = new mysqli("localhost", "root", "", "crop");
+$conn = new mysqli(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);

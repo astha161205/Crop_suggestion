@@ -1,14 +1,21 @@
 <?php
 session_start(); // Start the session
+
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 require_once 'theme_manager.php';
 require_once 'language_manager.php';
 $theme = getThemeClasses();
 
 // Database connection for blogs
-$host = 'localhost';
-$dbname = 'crop';
-$username = 'root';
-$password = '';
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -276,18 +283,18 @@ body {
     <div class="flex justify-center gap-12 flex-wrap">
         
         <!-- Farm Tech -->
-        <a href="./farmtech.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+        <a href="./farmtech.php" class="<?php echo $theme['bg_card']; ?>  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
             <img src="../photos/home/farm_tech.svg" alt="tech" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">farm_tech</p>
         </a>
 
         <!-- Support -->
-        <a href="./support.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+        <a href="./support.php" class="<?php echo $theme['bg_card']; ?>  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
             <img src="../photos/home/support.svg" alt="support" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">Support</p>
         </a>
         <!-- Feedback -->
-        <a href="./feedback.php" class="bg-gray-800  p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
+        <a href="./feedback.php" class="<?php echo $theme['bg_card']; ?> p-6 rounded-xl flex flex-col items-center w-56 transform transition-transform hover:scale-110">
             <img src="../photos/home/feed.webp" alt="feedback" class="h-32 w-32 mb-4">
             <p class="text-lg font-medium">Feedback</p>
         </a>
@@ -363,7 +370,7 @@ body {
                 <!-- Show default blogs if no blogs in database -->
                 <div class="box">
                     <img src="../photos/home/box1.jpg" alt="Image 1">
-                    <div class="caption bg-gray-800 text-white" style="color: #fff">
+                    <div class="caption <?php echo $theme['bg_card']; ?> text-white" style="color: #fff">
                         <h3 style="color: white">Investing In The Green Revolution: Growagros And Sustainable Agriculture</h3>
                         <a href="https://www.growagros.com/blog/investing-in-the-green-revolution-growagros-and-sustainable-agriculture/">Read More »</a>
                     </div>
@@ -400,7 +407,7 @@ body {
 </div>
 </div>
 
-<footer class="home-footer bg-gray-900 text-white py-6" >
+<footer class="home-footer<?php echo $theme['bg_card']; ?>  py-6" >
     <div class="footer-content container mx-auto">
         <!-- <div class="footer-section"  style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px;">
                 </div> -->
@@ -410,13 +417,13 @@ body {
             <ul class="footer-links space-y-2">
                 <h3 class="text-lg font-bold mb-3"><?php echo __('quick_links'); ?></h3>
                 <li><a href="./homePage.php" class="flex items-center gap-3 hover:underline">
-                    <img src="../photos/home/home-1-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('home'); ?>
+                    <?php echo __('home'); ?>
                 </a></li>
                 <li><a href="./blog.php" class="flex items-center gap-3 hover:underline">
-                    <img src="../photos/home/blog-svgrepo-com.svg" alt="" class="h-4 w-3"><?php echo __('blog'); ?>
+                    <?php echo __('blog'); ?>
                 </a></li>
                 <li><a href="./SUNSIDIES.php" class="flex items-center gap-3 hover:underline">
-                    <img src="../photos/home/about.svg" alt="" class="h-4 w-4"><?php echo __('Subsidies'); ?>
+                    <?php echo __('Subsidies'); ?>
                 </a></li>
             </ul>
         </div>
@@ -438,13 +445,13 @@ body {
             <ul class="footer-links space-y-2">
                 <h3 class="text-lg font-bold mb-3"><?php echo __('social_links'); ?></h3>
                 <li><a href="https://facebook.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
-                    <img src="../photos/home/facebook.svg" alt="" class="h-4 w-4">Facebook
+                    Facebook
                 </a></li>
                 <li><a href="https://instagram.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
-                    <img src="../photos/home/insta.svg" alt="" class="h-4 w-4">Instagram
+                    Instagram
                 </a></li>
                 <li><a href="https://twitter.com/agrigrow" target="_blank" class="flex items-center gap-2 hover:underline">
-                    <img src="../photos/home/twitter.svg" alt="" class="h-4 w-4">Twitter
+                    Twitter
                 </a></li>
             </ul>
         </div>

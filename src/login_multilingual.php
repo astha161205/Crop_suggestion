@@ -1,11 +1,24 @@
 <?php
 session_start();
+
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+
 require_once 'language_manager.php';
 
 // Database connection with error handling
 $conn = null;
+
 try {
-    $conn = new mysqli("localhost", "root", "", "crop");
+    $conn = new mysqli(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
     if ($conn->connect_error) {
         error_log("Database connection failed: " . $conn->connect_error);
         $conn = null;

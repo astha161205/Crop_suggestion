@@ -1,12 +1,14 @@
 <?php
 session_start();
-
-// Database connection
-$host = 'localhost';
-$dbname = 'crop';
-$username = 'root';
-$password = '';
-
+require __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+// Database connection using env vars
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

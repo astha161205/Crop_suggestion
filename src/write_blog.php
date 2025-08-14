@@ -6,12 +6,12 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header('Location: login.php');
     exit();
 }
-
-// Database connection
-$host = 'localhost';
-$dbname = 'crop';
-$username = 'root';
-$password = '';
+// Database connection using env vars
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

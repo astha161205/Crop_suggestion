@@ -1,5 +1,10 @@
 <?php
 session_start();
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 require_once 'theme_manager.php';
 require_once 'language_manager.php';
 $theme = getThemeClasses();
@@ -11,7 +16,14 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 // Database connection
-$conn = new mysqli("localhost", "root", "", "crop");
+$conn = new mysqli(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
+
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }

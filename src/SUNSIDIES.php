@@ -1,10 +1,21 @@
 <?php
 session_start();
+
+
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 require_once 'theme_manager.php';
 $theme = getThemeClasses();
 
-// Database connection
-$conn = new mysqli("localhost", "root", "", "crop");
+// Database connection using env vars
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
@@ -12,7 +23,13 @@ if ($conn->connect_error) {
 // Check connection health and reconnect if necessary
 if ($conn->ping() === false) {
     $conn->close();
-    $conn = new mysqli("localhost", "root", "", "crop");
+    $conn = new mysqli(
+        $_ENV['MYSQL_HOST'],
+        $_ENV['MYSQL_USER'],
+        $_ENV['MYSQL_PASSWORD'],
+        $_ENV['MYSQL_DATABASE'],
+        $_ENV['MYSQL_PORT']
+);
 }
 
 // Get filters from URL parameters

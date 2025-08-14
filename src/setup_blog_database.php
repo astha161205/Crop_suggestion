@@ -2,10 +2,17 @@
 // Blog Database Setup Script
 // Run this script to create the blogs table and insert sample data
 
-$host = 'localhost';
-$dbname = 'crop';
-$username = 'root';
-$password = '';
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+// Database connection using env vars
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);

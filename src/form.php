@@ -1,9 +1,17 @@
 <?php
-// MySQL DB config
-$host = "localhost";        // usually localhost
-$dbname = "backend";  // your database name
-$username = "root";         // your phpMyAdmin username (default is root)
-$password = "";             // your phpMyAdmin password (empty by default on XAMPP)
+
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+
+// Database connection using env vars
+$host = $_ENV['MYSQL_HOST'];
+$port = $_ENV['MYSQL_PORT'];
+$dbname = $_ENV['MYSQL_DATABASE'];
+$username = $_ENV['MYSQL_USER'];
+$password = $_ENV['MYSQL_PASSWORD'];
 
 // Connect to MySQL
 $conn = new mysqli($host, $username, $password, $dbname);

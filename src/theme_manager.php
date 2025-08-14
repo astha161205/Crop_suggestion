@@ -3,10 +3,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
 // Database connection with error handling
 $conn = null;
 try {
-    $conn = new mysqli("localhost", "root", "", "crop", 3306);
+    $conn = new mysqli(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
     if ($conn->connect_error) {
         // Log error but don't die - allow the application to continue
         error_log("Database connection failed: " . $conn->connect_error);
