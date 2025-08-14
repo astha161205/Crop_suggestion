@@ -274,7 +274,7 @@ function getProfileImage($profileData) {
         <a href="./homePage.php" class="<?php echo $theme['hover']; ?>"><?php echo __('home'); ?></a>
         <a href="./SUNSIDIES.php" class="<?php echo $theme['hover']; ?>"><?php echo __('subsidies'); ?></a>
         <a href="./blog.php" class="<?php echo $theme['hover']; ?>"><?php echo __('blog'); ?></a>
-        <a href="./homePage.php#About" class="<?php echo $theme['hover']; ?>"><?php echo __('about_us'); ?></a>
+        
         <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true): ?>
             <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
                 <a href="./admin_subsidies.php" class="<?php echo $theme['hover']; ?>"><?php echo __('admin_panel'); ?></a>

@@ -1,31 +1,26 @@
-# PHP + Apache
 FROM php:8.2-apache
 
-# Enable Apache modules
-RUN a2enmod rewrite headers
+# Install PHP extensions
+RUN apt-get update && apt-get install -y libzip-dev unzip \
+ && docker-php-ext-install mysqli pdo pdo_mysql zip \
+ && rm -rf /var/lib/apt/lists/*
 
-# PHP extensions
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+# Enable Apache rewrite module
+RUN a2enmod rewrite
 
-# Composer (safe if you don't use it)
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Set Apache document root to /var/www/html/src
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/src
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/*.conf /etc/apache2/apache2.conf
 
-# Start script that binds Apache to $PORT (Render/Railway)
-COPY docker/apache-run.sh /usr/local/bin/apache-run.sh
-RUN chmod +x /usr/local/bin/apache-run.sh
+# Copy app files into container
+COPY . /var/www/html
 
-WORKDIR /var/www/html
-
-# Install PHP deps if composer.json exists (won't fail if it doesn't)
-COPY composer.json composer.lock* ./
-RUN composer install --no-dev --prefer-dist --optimize-autoloader || true
-
-# Copy your app (your PHP lives in src/)
-COPY src/ ./
-
-# Permissions
+# Set correct ownership
 RUN chown -R www-data:www-data /var/www/html
 
-# Default expose (local); platform will pass $PORT anyway
-EXPOSE 8080
-CMD ["apache-run.sh"]
+# Start Apache with the correct port
+COPY render-start.sh /usr/local/bin/render-start.sh
+RUN chmod +x /usr/local/bin/render-start.sh
+
+CMD ["bash", "-lc", "/usr/local/bin/render-start.sh"]

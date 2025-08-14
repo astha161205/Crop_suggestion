@@ -1,6 +1,6 @@
 .git
-.vscode
+.env
 node_modules
 vendor
-.env
-composer.lock
+docker
+*.log
