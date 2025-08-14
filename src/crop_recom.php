@@ -3,9 +3,19 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Establish database connection
-$conn = mysqli_connect("localhost", "root", "", "crop");
+// Load environment variables from .env
+require __DIR__ . '/../vendor/autoload.php'; // adjust path if needed
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 
+// Establish database connection
+$conn = mysqli_connect(
+    $_ENV['MYSQL_HOST'],
+    $_ENV['MYSQL_USER'],
+    $_ENV['MYSQL_PASSWORD'],
+    $_ENV['MYSQL_DATABASE'],
+    $_ENV['MYSQL_PORT']
+);
 // Check connection
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
