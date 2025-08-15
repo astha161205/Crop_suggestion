@@ -11,6 +11,9 @@ services:
       - DB_USER=root
       - DB_PASS=root
       - DB_NAME=crop
+      # Email configuration for PHP Mailer - will be loaded from .env file
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
     depends_on:
       - db
     volumes:
